@@ -68,19 +68,14 @@
 				AND PRICE=#{searchKeyword}
 			</if>
 		</if>
-		<!-- <choose>
-			<when test="priceSort != null">
-				ORDER BY price #{priceSort}
-			</when>
-		</choose> -->
+		 <if test="priceSort != null">
+			ORDER BY price ${priceSort}
+		</if>
 		)
-		<!-- <if test="priceSort != null">
-			ORDER BY price #{priceSort}
-		</if> -->
 	</select>
 	
-		
 	
+		
 	<select id="allProduct" parameterType="com.model2.mvc.common.Search" resultMap="productSelectMap">
 	SELECT *
 	FROM ( SELECT ROWNUM AS row_n, vt1.*
@@ -101,14 +96,13 @@
 						</if>
 					</if>
 					
-					<!-- <if test="priceSort != null">
-					ORDER BY PRICE #{priceSort}
-					</if> -->
+					<if test="priceSort != '' and priceSort != null">
+					ORDER BY PRICE ${priceSort}
+					</if>
 				) vt1
 			) vt2
 		WHERE row_n BETWEEN ((#{currentPage}-1)*#{pageSize}+1) AND #{currentPage}*#{pageSize}
 	</select>
-		
 		
 		
 		

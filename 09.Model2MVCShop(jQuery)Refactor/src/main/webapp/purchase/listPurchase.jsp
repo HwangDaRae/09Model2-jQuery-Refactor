@@ -64,12 +64,10 @@
 		<c:forEach var="i" begin="0" end="${ size-1 }" step="1">
 			<tr class="ct_list_pop">
 				<td align="center">
-					<%-- <a href="/getPurchaseFromTranId.do?tranId=${ list[i].tranId }">${ size-i }</a> --%>
 					<a href="/purchase/getPurchaseFromTranId?tranId=${ list[i].tranId }">${ size-i }</a>
 				</td>
 				<td></td>
 				<td align="left">
-					<%-- <a href="/getUser.do?userId=${ list[i].buyer.userId }">${ list[i].buyer.userId }</a> --%>
 					<a href="/user/getUser?userId=${ list[i].buyer.userId }">${ list[i].buyer.userId }</a>
 				</td>
 				<td></td>
@@ -94,8 +92,7 @@
 	
 				<c:if test="${ fn:trim(list[i].tranCode) == '2' }">
 				<td align="left">
-				<%-- <a href="/updateTranCode.do?tranNo=${ list[i].tranNo }&tranCode=3&currentPage=${ resultPage.currentPage }">¹°°ÇµµÂø</a> --%>
-				<a href="/purchase/updateTranCode?tranNo=${ list[i].tranNo }&tranCode=3&currentPage=${ resultPage.currentPage }">¹°°ÇµµÂø</a>
+					<a href="/purchase/updateTranCode?tranNo=${ list[i].tranNo }&tranCode=3&currentPage=${ resultPage.currentPage }">¹°°ÇµµÂø</a>
 				</td>
 				</c:if>
 	

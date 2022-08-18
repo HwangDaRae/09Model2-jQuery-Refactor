@@ -10,12 +10,15 @@
 
 <form name="updatePurchase" action="/purchase/updatePurchaseView/0" method="post">
 
-다음과 같이 구매가 되었습니다.
+다음과 같이 구매가 되었습니다.${ i.fileName }
 
 <c:forEach var="i" begin="0" end="${ fn:length(prodList) -1 }" step="1">
 <table border=1>
 	<tr class="ct_list_pop" id="divDataId">
-		<td align="center"><img height="250" width="250" src="/images/uploadFiles/${ prodList[i].fileName }"/></td>
+		<td align="center">
+			<c:forEach var="j" begin="0" end="${ count-1 }" step="1" items="${ uploadList }">
+				<img height="250" width="250" src="/images/uploadFiles/${ j.fileName }"/></td>
+			</c:forEach>
 		<td></td>
 		<td align="left">${ prodList[i].prodName }</td>
 		<td></td>
@@ -31,53 +34,53 @@
 </c:forEach>
 <table border=1>
 	<tr>
-		<td>주문번호를 꼭 기억하세요</td>
-		<td>${ list[0].tranId }<%-- ${ purchaseVO.purchaseProd.prodNo } --%></td>
+		<td>주문번호</td>
+		<td>${ list[0].tranId }</td>
 		<td></td>
 	</tr>
 	<tr>
 		<td>구매자아이디</td>
 		<c:if test="${ list[0].buyer.userId == 'non-member' }">
-		<td>비회원<%-- ${ purchaseVO.buyer.userId } --%></td>
+		<td>비회원</td>
 		</c:if>
 		<c:if test="${ list[0].buyer.userId != 'non-member' }">
-		<td>${ list[0].buyer.userId }<%-- ${ purchaseVO.buyer.userId } --%></td>
+		<td>${ list[0].buyer.userId }</td>
 		</c:if>
 		<td></td>
 	</tr>
 	<tr>
 		<td>구매방법</td>
-		<td>${ (fn:trim(list[0].paymentOption) == '1')?"현금구매":"신용구매" }<%-- ${ (purchaseVO.paymentOption == '1')?"현금구매":"신용구매" } --%></td>
+		<td>${ (fn:trim(list[0].paymentOption) == '1')?"현금구매":"신용구매" }</td>
 		<td></td>
 	</tr>
 	<tr>
 		<td>구매자이름</td>
-		<td>${ list[0].receiverName }<%-- ${ purchaseVO.receiverName } --%></td>
+		<td>${ list[0].receiverName }</td>
 		<td></td>
 	</tr>
 	<tr>
 		<td>구매자연락처</td>
-		<td>${ list[0].receiverPhone }<%-- ${ purchaseVO.receiverPhone } --%></td>
+		<td>${ list[0].receiverPhone }</td>
 		<td></td>
 	</tr>
 	<tr>
 		<td>구매자주소</td>
-		<td>${ list[0].divyAddr }<%-- ${ purchaseVO.divyAddr } --%></td>
+		<td>${ list[0].divyAddr }</td>
 		<td></td>
 	</tr>
 		<tr>
 		<td>구매요청사항</td>
-		<td>${ list[0].divyRequest }<%-- ${ purchaseVO.divyRequest } --%></td>
+		<td>${ list[0].divyRequest }</td>
 		<td></td>
 	</tr>
 	<tr>
 		<td>배송희망일자</td>
-		<td>${ list[0].divyDate }<%-- ${ purchaseVO.divyDate } --%></td>
+		<td>${ list[0].divyDate }</td>
 		<td></td>
 	</tr>
 	<tr>
 		<td>총 가격</td>
-		<td>${ list[0].totalPrice }원<%-- ${ purchaseVO.totalPrice } --%></td>
+		<td>${ list[0].totalPrice }원</td>
 		<td></td>
 	</tr>
 </table>

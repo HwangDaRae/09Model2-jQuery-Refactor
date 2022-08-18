@@ -6,8 +6,39 @@
 <head>
 <meta charset="EUC-KR">
 <link rel="stylesheet" href="/css/admin.css" type="text/css">
+<script src="//code.jquery.com/jquery-2.1.4.js" type="text/javascript"></script>
 
 <script type="text/javascript">
+
+$(function(){
+	$("#navigator_start").bind("click",function(){
+		fncGetList(1)
+	})
+	
+	$("#navigator_before").bind("click",function(){
+		fncGetList(${ resultPage.beginUnitPage-1 })
+	})
+	
+	$("#navigator_after").bind("click",function(){
+		fncGetList(${ resultPage.endUnitPage+1 })
+	})
+	
+	$("#navigator_end").bind("click",function(){
+		fncGetList(${ resultPage.maxPage })
+	})
+	
+	$("b:contains('가격순')").bind("click",function(){
+		if( $(this).attr("id") == 'asc' ){
+			fncGetSortList('asc')
+		}else{
+			fncGetSortList('desc')
+		}
+	})
+	
+	$("td.ct_btn01:contains('검색')").bind("click",function(){
+		fncGetProductList()
+	})
+})
 
 function fncGetList(currentPage) {
 	document.getElementById("currentPage").value = currentPage;
@@ -15,7 +46,6 @@ function fncGetList(currentPage) {
 }
 function fncGetProductList() {
 	document.detailForm.searchCondition.value = document.detailForm.searchCondition.value;
-	//document.detailForm.searchKeyword.value = document.detailForm.searchKeyword.value;
 	document.forms[0].elements[2].value = document.forms[0].elements[2].value;
    	document.detailForm.submit();
 }
@@ -42,7 +72,7 @@ function fncGetSortList(priceSort) {
 		<td background="/images/ct_ttl_img02.gif" width="100%" style="padding-left:10px;">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
-					<td width="93%" class="ct_ttl01"> ${ sessionScope.user.role } ${ menu } 
+					<td width="93%" class="ct_ttl01"> ${ sessionScope.user.role } ${ menu }
 						<c:if test="${ menu == 'manage' }">
 							상품관리
 						</c:if>
@@ -80,7 +110,7 @@ function fncGetSortList(priceSort) {
 						<img src="/images/ct_btnbg01.gif" width="17" height="23">
 					</td>
 					<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top:3px;">
-						<a href="javascript:fncGetProductList();">검색</a>
+						검색
 					</td>
 					<td width="14" height="23">
 						<img src="/images/ct_btnbg03.gif" width="14" height="23">
@@ -95,7 +125,7 @@ function fncGetSortList(priceSort) {
 	<tr>
 		<td colspan="11" >전체 ${ resultPage.totalCount } 건수, 현재 ${ resultPage.currentPage } 페이지
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		<a href="javascript:fncGetSortList('asc')">낮은 가격순</a>&nbsp;/&nbsp;<a href="javascript:fncGetSortList('desc')">높은 가격순</a>
+		<b id="asc">낮은 가격순</b>&nbsp;/&nbsp;<b id="desc">높은 가격순</b>
 		<input type="hidden" name="priceSort" value="${ searchVO.priceSort }">
 		</td>
 	</tr>
@@ -123,7 +153,6 @@ function fncGetSortList(priceSort) {
 				<td></td>
 					<td align="left">
 						<!-- 판매코드가 0이 아니면 상품수정 불가 -->
-						<%-- <a href="/updateProductView.do?prodNo=${ list[i].prodNo }&menu=${ menu }">${ list[i].prodName }</a> --%>
 						<a href="/product/updateProductView/${ list[i].prodNo }/${ menu }">${ list[i].prodName }</a>
 					</td>				
 				<td></td>
@@ -138,7 +167,6 @@ function fncGetSortList(priceSort) {
 					<c:if test="${ fn:trim(list[i].proTranCode) == '1' }">
 						구매완료
 						<c:if test="${ menu == 'manage' }">
-							<%-- -<a href="/updateTranCodeByProd.do?prodNo=${ list[i].prodNo }&currentPage=${ resultPage.currentPage }&tranCode=2&menu=${ menu }">배송하기</a> --%>
 							-<a href="/purchase/updateTranCodeByProd?prodNo=${ list[i].prodNo }&currentPage=${ resultPage.currentPage }&tranCode=2&menu=${ menu }">배송하기</a>
 						</c:if>
 					</c:if>

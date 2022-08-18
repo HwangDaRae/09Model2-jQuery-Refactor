@@ -4,38 +4,48 @@
 <head>
 <link rel="stylesheet" href="/css/admin.css" type="text/css">
 <title>구매정보 수정</title>
-<script type="text/javascript" src="../javascript/calendar.js">
-</script>
+<script type="text/javascript" src="../javascript/calendar.js"></script>
+<script src="//code.jquery.com/jquery-2.1.4.js" type="text/javascript"></script>
+
 <script type="text/javascript">
-function count(type) {
-	//alert('type : ' + type);
+$(function(){
+	$("td.ct_btn01:contains('취소')").bind("click",function(){
+		history.go(-1)
+	})
 	
-	var number = document.getElementById('result').innerText;
-	var productAmount = document.getElementById('productAmount').value;
-	//alert('number : ' + number);
-	//alert('productAmount : ' + productAmount);
+	$("td.ct_btn01:contains('수정완료')").bind("click",function(){
+		$("form").attr("method","post").attr("action","/purchase/updatePurchase").submit();
+	})
+		
+	$("#show_calendar").bind("click",function(){
+		show_calendar('document.updatePurchase.divyDate', document.updatePurchase.divyDate.value)
+	})
 	
-	if( type == 'plus' ){
-		//alert('type : ' + type);
-		if( parseInt(number) < parseInt(productAmount) ){
-			number = parseInt(number) +1;
-		}else if( parseInt(number) == parseInt(productAmount) ){
-			document.getElementById('limit').innerText = '더이상 구매하실 수 없습니다';
+	var productAmount = $("#productAmount").val();
+	var number = $("#result").text()
+	$("input[value='+']").bind("click",function(){
+		if( number < productAmount ){
+			number++;
+		}else if( number == productAmount ){
+			$("#limit").text("더이상 구매하실 수 없습니다");
 			return;
 		}
-	}
-	else if( type == 'minus' ){
-		number = parseInt(number) -1;
-		if(number==0){
+		$("#amount").val( number );
+		$("#result").text( number );
+	})
+	
+	$("input[value='-']").bind("click",function(){
+		number--;
+		if(number == 0){
 			number = 1;
 		}else{
-			document.getElementById('limit').innerText = '';
+			$("#limit").text(" ");
 		}
-	}
+		$("#amount").val( number );
+		$("#result").text( number );
+	})
+});
 
-	document.getElementById('amount').value = number;
-	document.getElementById('result').innerText = number;
-}
 </script>
 
 </head>
@@ -140,8 +150,7 @@ function count(type) {
 		<td width="200" class="ct_write01">
 			<input type="text" name="divyDate" class="ct_input_g"
 				style="width: 100px; height: 19px" maxLength="20"/>
-				<img src="../images/ct_icon_date.gif" width="15" height="15"	
-					onclick="show_calendar('document.updatePurchase.divyDate', document.updatePurchase.divyDate.value)"/>
+				<img src="../images/ct_icon_date.gif" width="15" height="15" id="show_calendar" />
 		</td>
 	</tr>
 	<tr>
@@ -151,12 +160,12 @@ function count(type) {
 		<td width="104" class="ct_write">구매수량</td>
 		<td bgcolor="D6D6D6" width="1"></td>
 		<td class="ct_write01">
-			<input type="button" value="-" onclick='count("minus")'>
+			<input type="button" value="-">
 			<b id="result">${ purchaseVO.amount }</b>
 			<input type="text" id="amount" name="amount" value="${ purchaseVO.amount }">
 			<input type="text" id="productAmount" name="productAmount" value="${ productVO.amount }">
 			<input type="text" name="tranNo" value="${ purchaseVO.tranNo }">
-			<input type="button" value="+" onclick='count("plus")'>
+			<input type="button" value="+">
 			<b id="limit"></b>
 		</td>
 	</tr>
@@ -174,8 +183,8 @@ function count(type) {
 				<td width="17" height="23">
 					<img src="/images/ct_btnbg01.gif" width="17" height="23"/>
 				</td>
-				<td background="/images/ct_btnbg02.gif" class="ct_btn01"	style="padding-top: 3px;">
-					<input type="submit" value="수정"/>
+				<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top: 3px;">
+					수정완료
 				</td>
 				<td width="14" height="23">
 					<img src="/images/ct_btnbg03.gif" width="14" height="23"/>
@@ -185,7 +194,7 @@ function count(type) {
 					<img src="/images/ct_btnbg01.gif" width="17" height="23"/>
 				</td>
 				<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top: 3px;">
-					<a href="javascript:history.go(-1)">취소</a>
+					취소
 				</td>
 				<td width="14" height="23">
 					<img src="/images/ct_btnbg03.gif" width="14" height="23"/>

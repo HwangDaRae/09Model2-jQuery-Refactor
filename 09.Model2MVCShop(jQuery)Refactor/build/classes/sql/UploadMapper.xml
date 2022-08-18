@@ -20,7 +20,7 @@
 	</insert>
 	
 	<select id="getUploadFile" parameterType="string" resultType="com.model2.mvc.service.domain.Upload">
-		SELECT filename
+		SELECT *
 		FROM upload_file
 		WHERE fileNo = #{value}
 	</select>

@@ -4,43 +4,50 @@
 <%@page language="java" contentType="text/html; charset=EUC-KR" pageEncoding="EUC-KR"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+<script src="//code.jquery.com/jquery-2.1.4.js" type="text/javascript"></script>
 <script type="text/javascript">
-function count(type) {
-	var resultNumber = document.getElementById('result');
-	var productAmount = document.getElementById('productAmount').value;
-	var number = resultNumber.innerText;
+
+$(function(){
+	var productAmount = $("#productAmount").val();
+	var number = $("#result").text();
 	
-	if( type == 'plus' ){
-		if( parseInt(number) < parseInt(productAmount )){
-			number = parseInt(number) +1;
-		}else if( parseInt(number) == parseInt(productAmount) ){
-			document.getElementById('limit').innerText = '더이상 구매하실 수 없습니다';
-			return;
-		}
-	}else if( type == 'minus' ){
-		number = parseInt(number) -1;
+	$("input[value='-']").bind("click",function(){
+		number--;
 		if( number == 0 ){
 			number = 1;
 		}else{
-			document.getElementById('limit').innerText = '';
+			$("#limit").text(" ");
 		}
-	}else{
-		alert('혹시');
-	}
+		$("#amount").val(number);
+		$("#result").text(number);
+	})
+	
+	$("input[value='+']").bind("click",function(){
+		if(number < productAmount){
+			number++;
+		}else if(number == productAmount){
+			$("#limit").text("더이상 구매하실 수 없습니다");
+			return;
+		}
+		$("#amount").val(number);
+		$("#result").text(number);
+	})
+		
+	$("td.ct_btn01:contains('장바구니 담기')").bind("click",function(){
+		if(confirm('장바구니에 담으시겠습니까?')){
+			$("form").submit();
+		}
+	})
+	
+	$("td.ct_btn01:contains('구매')").bind("click",function(){
+		$("form").attr("action","/purchase/addPurchaseView").submit();
+	})
+	
+	$("td.ct_btn01:contains('이전')").bind("click",function(){
+		history.go(-1)
+	})
+});
 
-	document.getElementById('amount').value = number;
-	resultNumber.innerText = number;
-}
-function cartSubmit() {
-	if(confirm('장바구니에 담으시겠습니까?')){
-		document.detailForm.submit();
-	}
-}
-
-function addPurchase(){
-	document.detailForm.action = "/purchase/addPurchaseView";
-	document.detailForm.submit();
-}
 </script>
 
 <%--
@@ -166,12 +173,12 @@ response.addCookie(cookie);
 		<td width="104" class="ct_write">구매수량</td>
 		<td bgcolor="D6D6D6" width="1"></td>
 		<td class="ct_write01">
-			<input type="button" value="-" onclick='count("minus")'>
+			<input type="button" value="-">
 			<b id="result">1</b>
 			<input type="hidden" id="amount" name="amount" value="1">
 			<input type="hidden" id="productAmount" name="productAmount" value="${ productVO.amount }">
 			<input type="hidden" name="prod_no" value="${ productVO.prodNo }">
-			<input type="button" value="+" onclick='count("plus")'>
+			<input type="button" value="+">
 			<b id="limit"></b>
 		</td>
 	</tr>
@@ -184,22 +191,25 @@ response.addCookie(cookie);
 		</td>
 		<td bgcolor="D6D6D6" width="1"></td>
 		<td class="ct_write01">
+			<!-- 테이블 시작 -->
+			<table border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<td height="26">
+						<c:if test="${ count > 0 }">
+							<c:forEach var="i" items="${ uploadList }" begin="0" step="1" end="${ count-1 }">
+								<b id="123">
+									<img src="/images/uploadFiles/${ i.fileName }"/><br/>
+									${ i.fileName }<br/>
+								</b>
+							</c:forEach>
+						</c:if>
+						<c:if test="${ count <= 0 }">
+						이미지없음
+						</c:if>
+					</td>
+				</tr>
+			</table>
 		</td>
-		<!-- 테이블 시작 -->
-		<table border="0" cellspacing="0" cellpadding="0">
-			<tr>
-				<td height="26">
-					<c:if test="${ count > 0 }">
-						<c:forEach var="i" items="${ uploadList }" begin="0" step="1" end="${ count-1 }">
-							<b id="123">
-								<img src="/images/uploadFiles/${ i.fileName }"/><br/>
-								${ i.fileName }<br/>
-							</b>
-						</c:forEach>
-					</c:if>
-				</td>
-			</tr>
-		</table>
 	</tr>
 	<tr>
 		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
@@ -227,7 +237,7 @@ response.addCookie(cookie);
 					<img src="/images/ct_btnbg01.gif" width="17" height="23"/>
 				</td>
 				<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top: 3px;">
-					<input type="button" value="장바구니 담기" onclick="cartSubmit()">
+					장바구니 담기
 				</td>
 				<td width="14" height="23">
 					<img src="/images/ct_btnbg03.gif" width="14" height="23">
@@ -238,8 +248,7 @@ response.addCookie(cookie);
 						<img src="/images/ct_btnbg01.gif" width="17" height="23"/>
 					</td>
 					<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top: 3px;">
-						<input type="button" value="구매" onclick="addPurchase()">
-						<input type="button" value="">
+						구매
 					</td>
 					<td width="14" height="23">
 						<img src="/images/ct_btnbg03.gif" width="14" height="23">
@@ -251,7 +260,7 @@ response.addCookie(cookie);
 					<img src="/images/ct_btnbg01.gif" width="17" height="23"/>
 				</td>
 				<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top: 3px;">
-					<a href="javascript:history.go(-1)">이전</a>
+					이전
 				</td>
 				<td width="14" height="23">
 					<img src="/images/ct_btnbg03.gif" width="14" height="23">

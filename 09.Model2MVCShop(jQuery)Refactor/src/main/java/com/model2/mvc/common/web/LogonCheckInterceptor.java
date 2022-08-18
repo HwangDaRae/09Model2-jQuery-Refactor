@@ -74,7 +74,7 @@ public class LogonCheckInterceptor extends HandlerInterceptorAdapter {
 			}else if( uri.indexOf("addCart") != -1 || uri.indexOf("listCart") != -1 || uri.indexOf("deleteCart") != -1 || uri.indexOf("deliveryCart") != -1 ) {
 				System.out.println("[ 비회원 cart ]");
 				return true;
-			}else if( uri.indexOf("nonMemberPurchase") != -1 ) {
+			}else if( uri.indexOf("nonMemberPurchase") != -1 || uri.indexOf("addPurchaseView") != -1 || uri.indexOf("addPurchase") != -1 || uri.indexOf("getNonMemPurchase") != -1 ) {
 				System.out.println("[ 비회원 purchase ]");
 				return true;
 			}

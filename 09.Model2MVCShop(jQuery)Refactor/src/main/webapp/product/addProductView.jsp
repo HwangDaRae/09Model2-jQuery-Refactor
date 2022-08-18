@@ -6,55 +6,67 @@
 <title>상품등록</title>
 
 <link rel="stylesheet" href="/css/admin.css" type="text/css">
-
-<script type="text/javascript" src="../javascript/calendar.js">
-</script>
+<script src="//code.jquery.com/jquery-2.1.4.js" type="text/javascript"></script>
+<script type="text/javascript" src="../javascript/calendar.js"></script>
 
 <script type="text/javascript">
-<!--
-function fncAddProduct(){
-	//Form 유효성 검증
- 	var name = document.detailForm.prodName.value;
-	var detail = document.detailForm.prodDetail.value;
-	var manuDate = document.detailForm.manuDate.value;
-	var price = document.detailForm.price.value;
-
-	if(name == null || name.length<1){
-		alert("상품명은 반드시 입력하여야 합니다.");
-		return;
-	}
-	if(detail == null || detail.length<1){
-		alert("상품상세정보는 반드시 입력하여야 합니다.");
-		return;
-	}
-	if(manuDate == null || manuDate.length<1){
-		alert("제조일자는 반드시 입력하셔야 합니다.");
-		return;
-	}
-	if(price == null || price.length<1){
-		alert("가격은 반드시 입력하셔야 합니다.");
-		return;
-	}
-
-	document.detailForm.action='/product/addProduct';
-	document.detailForm.submit();
-}
-
-function resetData(){
-	document.detailForm.reset();
-}
--->
-</script>
-<script type="text/javascript">
-function addFile(obj){
-	var fileCnt = obj.files.length;
-	if(fileCnt > 5){
-		obj.value = "";
-		document.getElementById('limit').innerText = "최대 5개까지 업로드 가능합니다";
-	}else{
-		document.getElementById('limit').innerText = " ";
-	}
-}
+$(function(){
+	$("td.ct_btn01:contains('등록')").bind("click",function(){
+		var prodName = $("input[name='prodName']").val();
+		var prodDetail = $("input[name='prodDetail']").val();
+		var manuDate = $("input[name='manuDate']").val();
+		var amount = $("input[name='amount']").val();
+		var price = $("input[name='price']").val();
+		var uploadfile = $("input[name='uploadfile']").val();
+		
+		if(prodName == "" || prodName.length < 1){
+			alert("상품명은 반드시 입력하여야 합니다.");
+			return;
+		}
+		if(prodDetail == "" || prodDetail.length < 1){
+			alert("상품상세정보는 반드시 입력하여야 합니다.");
+			return;
+		}
+		if(manuDate == "" || manuDate.length < 1){
+			alert("제조일자는 반드시 입력하셔야 합니다.");
+			return;
+		}
+		if(amount == "" || amount.length < 1){
+			alert("수량은 반드시 입력하셔야 합니다.");
+			return;
+		}
+		if(price == "" || price.length < 1){
+			alert("가격은 반드시 입력하셔야 합니다.");
+			return;
+		}
+		if(uploadfile == "" || uploadfile.length < 1){
+			alert("파일은 반드시 1개이상 업로드하셔야 합니다.");
+			return;
+		}
+		
+		$("form").attr("action","/product/addProduct").submit();
+	})
+	
+	$("td.ct_btn01:contains('취소')").bind("click",function(){
+		$("form").each(function(){
+			this.reset();
+		})
+	})
+	
+	$("#show_calendar").bind("click",function(){
+		show_calendar('document.detailForm.manuDate', document.detailForm.manuDate.value)
+	})
+	
+	$("input[name='uploadfile']").bind("change",function(){
+		var fileCnt = $("input[name='uploadfile']")[0].files.length;
+		if(fileCnt > 5){
+			$("#limit").text("최대 5개까지 업로드 가능합니다");
+			$("input[name='uploadfile']").val("");
+		}else{
+			$("#limit").text(" ");
+		}
+	})
+});
 </script>
 </head>
 
@@ -118,7 +130,7 @@ function addFile(obj){
 				<td class="ct_write01">
 					<input type="text" name="manuDate" readonly="readonly" class="ct_input_g" style="width: 100px; height: 19px" maxLength="10" minLength="6" />
 					&nbsp;
-					<img src="../images/ct_icon_date.gif" width="15" height="15" onclick="show_calendar('document.detailForm.manuDate', document.detailForm.manuDate.value)" />
+					<img src="../images/ct_icon_date.gif" width="15" height="15" id="show_calendar" />
 				</td>
 			</tr>
 			<tr>
@@ -148,7 +160,7 @@ function addFile(obj){
 				<td width="104" class="ct_write">상품이미지</td>
 				<td bgcolor="D6D6D6" width="1"></td>
 				<td class="ct_write01">
-					<input type="file" id="fileMultipleId" name="uploadfile" value="value" class="ct_input_g" style="width: 200px; height: 19px" maxLength="13" onchange="addFile(this)" multiple="multiple">
+					<input type="file" name="uploadfile" class="ct_input_g" style="width: 200px; height: 19px" maxLength="5" multiple="multiple">
 					<b id="limit"></b>
 				</td>
 			</tr>
@@ -167,7 +179,7 @@ function addFile(obj){
 								<img src="/images/ct_btnbg01.gif" width="17" height="23" />
 							</td>
 							<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top: 3px;">
-								<a href="javascript:fncAddProduct();">등록</a>
+								등록
 							</td>
 							<td width="14" height="23">
 								<img src="/images/ct_btnbg03.gif" width="14" height="23" />
@@ -177,7 +189,7 @@ function addFile(obj){
 								<img src="/images/ct_btnbg01.gif" width="17" height="23" />
 							</td>
 							<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top: 3px;">
-								<a href="javascript:resetData();">취소</a>
+								취소
 							</td>
 							<td width="14" height="23">
 								<img src="/images/ct_btnbg03.gif" width="14" height="23" />

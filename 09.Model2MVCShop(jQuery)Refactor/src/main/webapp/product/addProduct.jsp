@@ -7,6 +7,17 @@
 <title>상품 목록조회</title>
 
 <link rel="stylesheet" href="/css/admin.css" type="text/css">
+<script src="//code.jquery.com/jquery-2.1.4.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(function(){
+	$("td.ct_btn01:contains('확인')").click(function(){
+		location.href="/product/listProduct/manage";
+	})
+	$("td.ct_btn01:contains('추가등록')").click(function(){
+		location.href="/product/addProductView";
+	})
+});
+</script>
 
 </head>
 
@@ -104,10 +115,17 @@
 			<table border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td height="26">
-						<c:forEach var="i" items="${ uploadList }" begin="0" end="${ count-1 }" step="1">
-							<img src="/images/uploadFiles/${ i.fileName }"/><br/>
-							${ i.fileName }<br/><hr/>
-						</c:forEach>
+						<c:if test="${ count > 0 }">
+							<c:forEach var="i" items="${ uploadList }" begin="0" step="1" end="${ count-1 }">
+								<b id="123">
+									<img src="/images/uploadFiles/${ i.fileName }"/><br/>
+									${ i.fileName }<br/>
+								</b>
+							</c:forEach>
+						</c:if>
+						<c:if test="${ count <= 0 }">
+						이미지없음
+						</c:if>
 					</td>
 				</tr>
 			</table>
@@ -128,8 +146,7 @@
 						<img src="/images/ct_btnbg01.gif" width="17" height="23"/>
 					</td>
 					<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top:3px;">
-						<!-- <a href="/listProduct.do?menu=manage">확인</a> -->
-						<a href="/product/listProduct/manage">확인</a>
+						확인
 					</td>
 					<td width="14" height="23">
 						<img src="/images/ct_btnbg03.gif" width="14" height="23"/>
@@ -138,8 +155,7 @@
 						<img src="/images/ct_btnbg01.gif" width="17" height="23"/>
 					</td>
 					<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top:3px;">
-						<!-- <a href="../product/addProductView.jsp;">추가등록</a> -->
-						<a href="/product/addProductView">추가등록</a>
+						추가등록
 					</td>
 					<td width="14" height="23">
 						<img src="/images/ct_btnbg03.gif" width="14" height="23"/>

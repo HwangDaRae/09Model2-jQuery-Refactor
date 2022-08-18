@@ -173,7 +173,11 @@ public class ProductController {
 	@RequestMapping( value = "getProduct/{prodNo}/{menu}", method = RequestMethod.GET )
 	public String getProduct(@PathVariable int prodNo, @PathVariable String menu, Model model ) throws Exception {
 		System.out.println("/getProduct : GET");
+		List<Upload> uploadList = uploadServiceImpl.getUploadFile(productServiceImpl.getProduct(prodNo).getFileName());
+		
 		model.addAttribute("productVO", productServiceImpl.getProduct(prodNo));
+		model.addAttribute("uploadList", uploadList);
+		model.addAttribute("count", uploadList.get(0).getFileCount());
 		return "forward:/product/getProduct.jsp";
 	}
 	
@@ -196,13 +200,13 @@ public class ProductController {
 		String fileNo = sdf1.format( Calendar.getInstance().getTime() ) + "";
 		
 		for(int i = 0; i < multiFileList.size(); i++) {
-			multiFileList.get(i).transferTo(new File("C:\\Users\\bitcamp\\git\\08Refactor\\08.Model2MVCShop(URI,pattern)Refactor\\src\\main\\webapp\\images\\uploadFiles\\",
+			multiFileList.get(i).transferTo(new File("C:\\Users\\bitcamp\\git\\09Model2-jQuery-Refactor\\09.Model2MVCShop(jQuery)Refactor\\src\\main\\webapp\\images\\uploadFiles\\",
 					multiFileList.get(i).getOriginalFilename()));
 			uploadVO = new Upload();
 			uploadVO.setFileNo(fileNo);
 			uploadVO.setFileCount(multiFileList.size());
 			uploadVO.setFileName(multiFileList.get(i).getOriginalFilename());
-			uploadVO.setFile_path("C:\\Users\\bitcamp\\git\\08Refactor\\08.Model2MVCShop(URI,pattern)Refactor\\src\\main\\webapp\\images\\uploadFiles");
+			uploadVO.setFile_path("C:\\Users\\bitcamp\\git\\09Model2-jQuery-Refactor\\09.Model2MVCShop(jQuery)Refactor\\src\\main\\webapp\\images\\uploadFiles\\");
 			uploadList.add(uploadVO);
 		}
 		
@@ -247,13 +251,13 @@ public class ProductController {
 		
 		// File file = new File(경로 + 파일이름);
 		for(int i = 0; i < multiFileList.size(); i++) {
-			multiFileList.get(i).transferTo(new File("C:\\Users\\bitcamp\\git\\08Refactor\\08.Model2MVCShop(URI,pattern)Refactor\\src\\main\\webapp\\images\\uploadFiles\\",
+			multiFileList.get(i).transferTo(new File("C:\\Users\\bitcamp\\git\\09Model2-jQuery-Refactor\\09.Model2MVCShop(jQuery)Refactor\\src\\main\\webapp\\images\\uploadFiles\\",
 					multiFileList.get(i).getOriginalFilename()));
 			uploadVO = new Upload();
 			uploadVO.setFileName(multiFileList.get(i).getOriginalFilename());
 			uploadVO.setFileNo(productVO.getFileName());
 			uploadVO.setFileCount(multiFileList.size());
-			uploadVO.setFile_path("C:\\Users\\bitcamp\\git\\08Refactor\\08.Model2MVCShop(URI,pattern)Refactor\\src\\main\\webapp\\images\\uploadFiles\\");
+			uploadVO.setFile_path("C:\\Users\\bitcamp\\git\\09Model2-jQuery-Refactor\\09.Model2MVCShop(jQuery)Refactor\\src\\main\\webapp\\images\\uploadFiles\\");
 			
 			List<Upload> list = uploadServiceImpl.getUploadFile(productVO.getFileName());
 			if(multiFileList.size() >= list.size()) {

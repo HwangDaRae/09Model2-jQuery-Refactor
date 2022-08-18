@@ -31,9 +31,11 @@ import com.model2.mvc.common.Search;
 import com.model2.mvc.service.cart.CartService;
 import com.model2.mvc.service.domain.Product;
 import com.model2.mvc.service.domain.Purchase;
+import com.model2.mvc.service.domain.Upload;
 import com.model2.mvc.service.domain.User;
 import com.model2.mvc.service.product.ProductService;
 import com.model2.mvc.service.purchase.PurchaseService;
+import com.model2.mvc.service.upload.UploadService;
 
 @Controller
 @RequestMapping("/purchase/*")
@@ -50,6 +52,10 @@ public class PurchaseController {
 	@Autowired
 	@Qualifier("cartServiceImpl")
 	CartService cartServiceImpl;
+	
+	@Autowired
+	@Qualifier("uploadServiceImpl")
+	UploadService uploadServiceImpl;
 
 	public PurchaseController() {
 		System.out.println(getClass() + " default Constructor()]");
@@ -137,8 +143,6 @@ public class PurchaseController {
 		String tranId = sdf1.format( Calendar.getInstance().getTime() ) + "";
 		System.out.println("purchaseVO.toString() defore : " + purchaseVO.toString());
 		
-		
-		
     	// 상세정보보기에서 구매
 		// 주문번호 넣기
 		purchaseVO.setTranId(tranId);
@@ -167,9 +171,13 @@ public class PurchaseController {
 			System.out.println(prodNo);
 			prodList.add(product);
 		}
+		
+		List<Upload> uploadList = uploadServiceImpl.getUploadFile(prodList.get(0).getFileName());
 
 		model.addAttribute("list", list);
 		model.addAttribute("prodList", prodList);
+		model.addAttribute("uploadList", uploadList);
+		model.addAttribute("count", uploadList.size());
 		
 		return new ModelAndView("/purchase/addPurchase.jsp", "model", model);
 	}
@@ -307,8 +315,11 @@ public class PurchaseController {
 			proList.add(product);
 		}
 		
+		List<Upload> uploadList = uploadServiceImpl.getUploadFile(proList.get(0).getFileName());
+		
 		model.addAttribute("purList", purList);
 		model.addAttribute("proList", proList);
+		model.addAttribute("uploadList", uploadList);
 		
 		return new ModelAndView("/purchase/getPurchase.jsp", "model", model);
 	}

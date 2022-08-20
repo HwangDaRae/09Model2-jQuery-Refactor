@@ -7,6 +7,13 @@
 <title>회원 목록 조회</title>
 
 <link rel="stylesheet" href="/css/admin.css" type="text/css">
+<script src="//code.jquery.com/jquery-2.1.4.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+$(function(){
+	//
+})
+</script>
 
 <script type="text/javascript">
 

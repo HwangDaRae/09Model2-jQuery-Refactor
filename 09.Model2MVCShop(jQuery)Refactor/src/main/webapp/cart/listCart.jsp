@@ -2,94 +2,104 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
+<script src="//code.jquery.com/jquery-2.1.4.js" type="text/javascript"></script>
 <script type="text/javascript">
-//전체선택 체크박스 클릭시 모든 체크박스 선택됨
-function selectAll(){
-	var arrayCheckBox = document.getElementsByName("deleteCheckBox");
-	if(document.getElementById("allDeleteCheckBox").checked == true){
-	    for(var i=0;i<arrayCheckBox.length;i++) {
-	    	document.getElementsByName("deleteCheckBox")[i].checked = true;
-	    	document.getElementById('checkCount').innerText = arrayCheckBox.length;
-	    }
-	}else{
-	    for(var i=0;i<arrayCheckBox.length;i++) {
-	    	document.getElementsByName("deleteCheckBox")[i].checked = false;
-	    	document.getElementById('checkCount').innerText = 0;
-	    }
-	}
-}
 
-//수량변경
-function count(type,i,size) {
-	alert(type);
+$(function(){
+
+	//구매버튼 클릭 => 배송정보 입력 페이지로 이동
+	$("input[value='구매']").bind("click",function(){
+		$("form").attr("method","post").attr("action","/cart/deliveryCart").submit();
+	})
 	
-	//type에 plus or minus가 포함되어 있다면
-	var typeArr = type.split(",");
-
-	for (var i = 0; i < typeArr[2]; i++) {
-		if(typeArr[1] == i){
-			//화면에 보이는 수량
-			var countAmount = document.getElementById('result_'+i).innerText;
-			//상품재고수량
-			var prodAmount = document.getElementById('prodAmount_'+i).value;
-			
-			if(typeArr[0]=='plus'){
-				if(parseInt(countAmount) < parseInt(prodAmount)){
-					countAmount = parseInt(countAmount) +1;
-				}else if(parseInt(countAmount) == parseInt(prodAmount)){
-					document.getElementById('limit_'+i).innerText = '더이상 구매하실 수 없습니다';
-				}
-			}else if(typeArr[0]=='minus'){
-				if(parseInt(countAmount) == 1){
-					countAmount = 1;
-				}else if(parseInt(countAmount) > 1){
-					countAmount = parseInt(countAmount) -1;
-					document.getElementById('limit_'+i).innerText = ' ';
-				}
-			}
-			
-			var printPrice = document.getElementById('printPrice_'+i).innerText;
-			document.getElementById('printAmount_'+i).innerText = parseInt(countAmount);
-			document.getElementById('printTotalPrice_'+i).innerText = parseInt(countAmount) * parseInt(printPrice);
-			document.getElementById('result_'+i).innerText = countAmount;
-			document.getElementById('amount_'+i).value = countAmount;
-			
-		}//end of if(typeArr[1] == i)
-	}//end of for
-	
-}
-
-//체크된 상품개수
-function ischecked(){
-	var arrayCheckBox = document.getElementsByName("deleteCheckBox");
-	var checkCount = 0;
-	for(var i=0;i<arrayCheckBox.length;i++) {
-		if(arrayCheckBox[i].checked){
-			checkCount++;
+	//체크한 상품 삭제
+	$("input[value='선택 삭제'").bind("click",function(){
+		if(confirm('정말 삭제하시겠습니까?')){
+			$("form").attr("method","post").attr("action","/cart/deleteCart").submit();
 		}
-    }
-
-	if(parseInt(checkCount)==parseInt(arrayCheckBox.length)){
-		document.getElementById("allDeleteCheckBox").checked = true;
-	}else{
-		document.getElementById("allDeleteCheckBox").checked = false;
-	}
+	})
 	
-	document.getElementById('checkCount').innerText = checkCount;
-}
+	//상품 체크박스 상태가 변경되면 전체상품의 개수 변경
+	$("#deleteCheckBox").bind("change",function(){
+		var arrayCheckBox = $("input[name='deleteCheckBox']")
+		var checkCount = 0;
+		
+		arrayCheckBox.each(function(index){
+			if( $( arrayCheckBox[index] ).is(":checked") == true ){
+				checkCount++;
+			}
+		})
+		
+		if( checkCount == arrayCheckBox.length ){
+			$("#allDeleteCheckBox").attr("checked", true);
+		}else{
+			$("#allDeleteCheckBox").attr("checked", false);
+		}
+		$("#checkCount").text(checkCount);
+	})
+	
+	//수량 plus
+	$("input[value='+']").bind("click",function(){
+		//화면에 보이는 수량
+		var countAmount = $(this).parent().children("#result").text();
+		//상품재고수량
+		var prodAmount = $(this).parent().children("#prodAmount").val();
+		
+		if(parseInt(countAmount) < parseInt(prodAmount)){
+			countAmount = parseInt(countAmount) +1;
+		}else if(parseInt(countAmount) == parseInt(prodAmount)){
+			$(this).parent().children("#limit").text("더이상 구매하실 수 없습니다");
+		}
+		
+		$(this).parent().parent().children("td").children("#printAmount").text(countAmount);
+		var printPrice = $(this).parent().parent().children("td").children("#printPrice").text();
+		$(this).parent().parent().children("td").children("#printTotalPrice").text( parseInt(countAmount) * parseInt(printPrice) );
+		$(this).parent().children("#result").text(countAmount);
+		$(this).parent().children("#amount").val(countAmount);
+	})
+	
+	//수량 minus
+	$("input[value='-']").bind("click",function(){
+		//화면에 보이는 수량
+		var countAmount = $(this).parent().children("#result").text();
+		//상품재고수량
+		var prodAmount = $(this).parent().children("#prodAmount").val();
+		
+		if(parseInt(countAmount) == 1){
+			countAmount = 1;
+		}else if(parseInt(countAmount) > 1){
+			countAmount = parseInt(countAmount) -1;
+			$(this).parent().children("#limit").text(" ");
+		}
+		
+		$(this).parent().parent().children("td").children("#printAmount").text(countAmount);
+		var printPrice = $(this).parent().parent().children("td").children("#printPrice").text();
+		$(this).parent().parent().children("td").children("#printTotalPrice").text( parseInt(countAmount) * parseInt(printPrice) );
+		$(this).parent().children("#result").text(countAmount);
+		$(this).parent().children("#amount").val(countAmount);
+	})
 
-function deleteBtnClick(){
-	if(confirm('정말 삭제하시겠습니까?')){
-		document.detailForm.action="/cart/deleteCart";
-		document.detailForm.submit();
-	}
-}
-
-function cartTransaction(){
-	alert('a');		
-	document.detailForm.submit();
-}
-
+	//전체선택 체크박스 클릭시 모든 체크박스 선택됨
+	$("#allDeleteCheckBox").bind("click",function(){		
+		var arrayCheckBox = $("input[name='deleteCheckBox']")		
+		
+		if( $("#allDeleteCheckBox").is(':checked') == true ){
+			$("#checkCount").text(arrayCheckBox.length);
+			arrayCheckBox.each(function( index, elem ){
+				//alert( $( arrayCheckBox[index] ).attr("name"));
+				$( arrayCheckBox[index] ).attr("checked",true);
+			})			
+			
+		}else if( $("#allDeleteCheckBox").is(':checked') == false ){
+			$("#checkCount").text(0);
+			arrayCheckBox.each(function( index, elem ){
+				//alert( $( arrayCheckBox[index] ).attr("name"));
+				$( arrayCheckBox[index] ).attr("checked",false);
+			})
+		}
+	})
+		
+});
 </script>
 
 <html>
@@ -121,10 +131,10 @@ function cartTransaction(){
 				<tr>
 					<td colspan="11">
 						<a href="">
-							<input type="checkbox" id="allDeleteCheckBox" name="allDeleteCheckBox" value="selectAll" onclick='selectAll()'>전체선택&nbsp;&nbsp;
+							<input type="checkbox" id="allDeleteCheckBox" name="allDeleteCheckBox">전체선택&nbsp;&nbsp;
 							<b id="checkCount">0</b>&nbsp;/&nbsp;${ count }</a>&nbsp;&nbsp;
-						<input type="button" value="선택 삭제" onclick='deleteBtnClick()'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						<input type="button" value="구매" onclick="cartTransaction()">
+						<input type="button" value="선택 삭제">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<input type="button" value="구매">
 					</td>
 
 				</tr>
@@ -148,9 +158,8 @@ function cartTransaction(){
 						<c:forEach var="i" begin="0" end="${ size-1 }" step="1">
 							<tr class="ct_list_pop" id="divDataId">
 								<td align="center">
-								<%-- <c:if test="${ list[i].prod_amount != 0 }"> --%>
 								<c:if test="${ count > 0 }">
-								<input type="checkbox" onclick="ischecked()" id="deleteCheckBox" name="deleteCheckBox" value="${ list[i].prod_no }"></td>
+								<input type="checkbox" id="deleteCheckBox" name="deleteCheckBox" value="${ list[i].prod_no }"></td>
 								</c:if>
 								<td></td>
 								<td align="left"><img height="250" width="250" src="/images/uploadFiles/${ list[i].image }"/></td>
@@ -158,19 +167,19 @@ function cartTransaction(){
 								<td align="left">${ list[i].prod_name }</td>
 								<td></td>
 								<td align="left">
-									<input type="button" value="-" class="btn_minus" onclick='count("minus,${ i },${ size }")'>
-									<b id="result_${ i }">${ list[i].amount }</b>
-									<input type="text" id="amount_${ i }" name="amount" value="${ list[i].amount }">
-									<input type="text" id="prodAmount_${ i }" name="prodAmount" value="${ list[i].prod_amount }">
-									<input type="text" id="addPurchaseCheckBox" name="addPurchaseCheckBox" value="${ list[i].prod_no }">
-									<input type="button" value="+" class="btn_plus" onclick='count("plus,${ i },${ size }")'>
-									<b id="limit_${ i }"></b>
+									<input type="button" value="-">
+									<b id="result">${ list[i].amount }</b>
+									<input type="hidden" id="amount" name="amount" value="${ list[i].amount }">
+									<input type="hidden" id="prodAmount" name="prodAmount" value="${ list[i].prod_amount }">
+									<input type="hidden" id="addPurchaseCheckBox" name="addPurchaseCheckBox" value="${ list[i].prod_no }">
+									<input type="button" value="+">
+									<b id="limit"></b>
 								</td>
 								<td></td>
 								<td align="left">
-								<b id="printPrice_${ i }">${ list[i].price }</b>원 * 
-								<b id="printAmount_${ i }">${ list[i].amount }</b>개 = 
-								<b id="printTotalPrice_${ i }">${ list[i].price * list[i].amount }</b>원
+									<b id="printPrice">${ list[i].price }</b>원 * 
+									<b id="printAmount">${ list[i].amount }</b>개 = 
+									<b id="printTotalPrice">${ list[i].price * list[i].amount }</b>원
 								</td>
 							</tr>
 							<tr>
@@ -185,9 +194,8 @@ function cartTransaction(){
 						<c:forEach var="i" begin="0" end="${ size-1 }" step="1">
 							<tr class="ct_list_pop" id="divDataId">
 								<td align="center">
-								<%-- <c:if test="${ list[i].prod_amount != 0 }"> --%>
 								<c:if test="${ count > 0 }">
-								<input type="checkbox" onclick="ischecked()" id="deleteCheckBox" name="deleteCheckBox" value="${ list[i].prod_no }"></td>
+								<input type="checkbox" id="deleteCheckBox" name="deleteCheckBox" value="${ list[i].prod_no }"></td>
 								</c:if>
 								<td></td>
 								<td align="left"><img height="250" width="250" src="/images/uploadFiles/${ list[i].image }"/></td>
@@ -195,19 +203,19 @@ function cartTransaction(){
 								<td align="left">${ list[i].prod_name }</td>
 								<td></td>
 								<td align="left">
-									<input type="button" value="-" class="btn_minus" onclick='count("minus,${ i },${ size }")'>
-									<b id="result_${ i }">${ list[i].amount }</b>
-									<input type="text" id="amount_${ i }" name="amount" value="${ list[i].amount }">
-									<input type="text" id="prodAmount_${ i }" name="prodAmount" value="${ list[i].prod_amount }">
+									<input type="button" value="-">
+									<b id="result">${ list[i].amount }</b>
+									<input type="text" id="amount" name="amount" value="${ list[i].amount }">
+									<input type="text" id="prodAmount" name="prodAmount" value="${ list[i].prod_amount }">
 									<input type="text" id="addPurchaseCheckBox" name="addPurchaseCheckBox" value="${ list[i].prod_no }">
-									<input type="button" value="+" class="btn_plus" onclick='count("plus,${ i },${ size }")'>
-									<b id="limit_${ i }"></b>
+									<input type="button" value="+">
+									<b id="limit"></b>
 								</td>
 								<td></td>
 								<td align="left">
-								<b id="printPrice_${ i }">${ list[i].price }</b>원 * 
-								<b id="printAmount_${ i }">${ amountList[i].amount }</b>개 = 
-								<b id="printTotalPrice_${ i }">${ list[i].price * list[i].amount }</b>원
+									<b id="printPrice">${ list[i].price }</b>원 * 
+									<b id="printAmount">${ amountList[i].amount }</b>개 = 
+									<b id="printTotalPrice">${ list[i].price * list[i].amount }</b>원
 								</td>
 							</tr>
 							<tr>

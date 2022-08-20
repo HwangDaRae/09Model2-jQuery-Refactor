@@ -7,40 +7,40 @@
 <title>아이디 중복 확인</title>
 
 <link rel="stylesheet" href="/css/admin.css" type="text/css">
+<script src="//code.jquery.com/jquery-2.1.4.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 
+$(function(){
+	$("td.ct_btn01:contains('닫기')").bind("click",function(){
+		window.close();
+	})
+	
+	$("td.ct_btn01:contains('사용')").bind("click",function(){
+		if(opener) {
+			opener.document.detailForm.userId.value = "${userId}";
+		}
+		window.close();
+	})
+	
+	// Form 유효성 검증
+	$("td.ct_btn:contains('중복확인')").bind("click",function(){
+		if( $("#userId").val() != null && $("#userId").val().length >0) {
+			$("form").attr("method","post").attr("action","/user/checkDuplication").submit();
+		}else {
+			alert('아이디는 반드시 입력하셔야 합니다.');
+		}
+		$("#userId").focus();
+	})
+})
+
 window.onload = function(){
-	document.getElementById("userId").focus();
+	$("#userId").focus();
 	document.getElementById("userId").onkeydown = function(){
 		if(event.keyCode == '13') {
 			fncCheckDuplication();
 		}
 	}
-}
-
-function fncCheckDuplication() {
-	// Form 유효성 검증
-	if(document.detailForm.userId.value != null && document.detailForm.userId.value.length >0) {
-	   	
-		///////////////////////////////////////////////////////////////////////////////////////////////
-		//document.detailForm.action='/checkDuplication.do';
-	    ///////////////////////////////////////////////////////////////////////////////////////////////
-	    document.detailForm.action='/user/checkDuplication';
-	    
-		document.detailForm.submit();
-		
-	}else {
-		alert('아이디는 반드시 입력하셔야 합니다.');
-	}
-	document.getElementById("userId").focus(); 
-}
-
-function fncUseId() {
-	if(opener) {
-		opener.document.detailForm.userId.value = "${userId}";
-	}
-	window.close();
 }
 
 </script>
@@ -123,7 +123,7 @@ function fncUseId() {
 									<img src="/images/ct_btng01.gif" width="4" height="21">
 								</td>
 								<td align="center" background="/images/ct_btng02.gif" class="ct_btn" style="padding-top:3px;">
-									<a href="javascript:fncCheckDuplication();">중복확인</a>
+									중복확인
 								</td>
 								<td width="4" height="21">
 									<img src="/images/ct_btng03.gif" width="4" height="21"/>
@@ -156,7 +156,7 @@ function fncUseId() {
 							<img src="/images/ct_btnbg01.gif" width="17" height="23"/> 
 						</td>
 						<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top:3px;">
-							<a href="javascript:fncUseId();">사용</a>
+							사용
 						</td>
 						<td width="14" height="23">
 							<img src="/images/ct_btnbg03.gif" width="14" height="23"/>
@@ -167,7 +167,7 @@ function fncUseId() {
 						<img src="/images/ct_btnbg01.gif" width="17" height="23"/>
 					</td>
 					<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top:3px;">
-						<a href="javascript:window.close();">닫기</a>
+						닫기
 					</td>
 					<td width="14" height="23">
 						<img src="/images/ct_btnbg03.gif" width="14" height="23"/>

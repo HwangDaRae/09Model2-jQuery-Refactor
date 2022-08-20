@@ -11,6 +11,7 @@
 <script type="text/javascript">
 
 $(function(){
+	
 	$("#navigator_start").bind("click",function(){
 		fncGetList(1)
 	})
@@ -38,17 +39,30 @@ $(function(){
 	$("td.ct_btn01:contains('검색')").bind("click",function(){
 		fncGetProductList()
 	})
+	
+	$("b").bind("click",function(){
+		var id = $(this).parent().parent().attr("id")
+		if($(this).text().trim() == "-배송하기"){
+			location.href="/purchase/updateTranCodeByProd?prodNo="+id+"&currentPage=${ resultPage.currentPage }&tranCode=2&menu=${ menu }";
+		}else{
+			location.href="/product/updateProductView/"+id+"/${ menu }";
+		}
+	})
+	
 })
+
 
 function fncGetList(currentPage) {
 	document.getElementById("currentPage").value = currentPage;
    	document.detailForm.submit();
 }
+
 function fncGetProductList() {
 	document.detailForm.searchCondition.value = document.detailForm.searchCondition.value;
 	document.forms[0].elements[2].value = document.forms[0].elements[2].value;
    	document.detailForm.submit();
 }
+
 function fncGetSortList(priceSort) {
 	document.detailForm.priceSort.value = priceSort;
    	document.detailForm.submit();
@@ -148,12 +162,13 @@ function fncGetSortList(priceSort) {
 
 	<c:if test="${ !empty sessionScope.user && sessionScope.user.role == 'admin' }">
 		<c:forEach var="i" begin="0" end="${ size-1 }" step="1">
-			<tr class="ct_list_pop">
+			<tr class="ct_list_pop" id="${ list[i].prodNo }">
 				<td align="center">${ size-i }</td>
 				<td></td>
 					<td align="left">
 						<!-- 판매코드가 0이 아니면 상품수정 불가 -->
-						<a href="/product/updateProductView/${ list[i].prodNo }/${ menu }">${ list[i].prodName }</a>
+						<b>${ list[i].prodName }</b>
+						<%-- <a href="/product/updateProductView/${ list[i].prodNo }/${ menu }">${ list[i].prodName }</a> --%>
 					</td>				
 				<td></td>
 				<td align="left">${ list[i].price }</td>
@@ -167,7 +182,8 @@ function fncGetSortList(priceSort) {
 					<c:if test="${ fn:trim(list[i].proTranCode) == '1' }">
 						구매완료
 						<c:if test="${ menu == 'manage' }">
-							-<a href="/purchase/updateTranCodeByProd?prodNo=${ list[i].prodNo }&currentPage=${ resultPage.currentPage }&tranCode=2&menu=${ menu }">배송하기</a>
+							<b>-배송하기</b>
+							<%-- -<a href="/purchase/updateTranCodeByProd?prodNo=${ list[i].prodNo }&currentPage=${ resultPage.currentPage }&tranCode=2&menu=${ menu }">배송하기</a> --%>
 						</c:if>
 					</c:if>
 					<c:if test="${ fn:trim(list[i].proTranCode) == '2' }">
@@ -186,13 +202,13 @@ function fncGetSortList(priceSort) {
 	<!-- 회원, 비회원 -->
 	<c:if test="${ sessionScope.user.role != 'admin' }">
 		<c:forEach var="i" begin="0" end="${ listSize-1 }" step="1">
-			<tr class="ct_list_pop">
+			<tr class="ct_list_pop" id="${ list[i].prodNo }">
 				<td align="center">${ listSize-i }</td>
 				<td></td>
 					<td align="left">
 						<c:if test="${ fn:trim(list[i].proTranCode) == '0' }">
-							<%-- <a href="/getProduct.do?prodNo=${ list[i].prodNo }&menu=${ menu }">${ list[i].prodName }</a> --%>
-							<a href="/product/getProduct/${ list[i].prodNo }/${ menu }">${ list[i].prodName }</a>
+							<b>${ list[i].prodName }</b>
+							<%-- <a href="/product/getProduct/${ list[i].prodNo }/${ menu }">${ list[i].prodName }</a> --%>
 						</c:if>
 						<c:if test="${ fn:trim(list[i].proTranCode) != '0' }">
 							${ list[i].prodName }

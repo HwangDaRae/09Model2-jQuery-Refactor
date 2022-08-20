@@ -6,12 +6,29 @@
 <title>구매 목록조회</title>
 
 <link rel="stylesheet" href="/css/admin.css" type="text/css">
+<script src="//code.jquery.com/jquery-2.1.4.js" type="text/javascript"></script>
 
 <script type="text/javascript">
-	function fncGetList(currentPage) {
-		document.getElementById("currentPage").value = currentPage;
-	   	document.detailForm.submit();
-	}
+$(function(){
+	$("b").bind("click",function(){
+		var id = $(this).parent().parent().attr("id")
+		if( $(this).text().trim() == '물건도착' ){
+			location.href="/purchase/updateTranCode?tranNo="
+				+$(this).attr("id")+"&tranCode=3&currentPage=${ resultPage.currentPage }";
+		}else if( $(this).parent().attr("id") != 'abc' ){
+			location.href="/purchase/getPurchaseFromTranId?tranId="+id;
+		}else{
+			location.href="/user/getUser?userId=${ list[i].buyer.userId }";
+		}
+	})
+});
+</script>
+
+<script type="text/javascript">
+function fncGetList(currentPage) {
+	document.getElementById("currentPage").value = currentPage;
+   	document.detailForm.submit();
+}
 </script>
 
 </head>
@@ -62,13 +79,13 @@
 		<c:set var="size" value="${ fn:length(list) }"/>
 		
 		<c:forEach var="i" begin="0" end="${ size-1 }" step="1">
-			<tr class="ct_list_pop">
+			<tr class="ct_list_pop" id="${ list[i].tranId }">
 				<td align="center">
-					<a href="/purchase/getPurchaseFromTranId?tranId=${ list[i].tranId }">${ size-i }</a>
+					<b>${ size-i }</b>
 				</td>
 				<td></td>
-				<td align="left">
-					<a href="/user/getUser?userId=${ list[i].buyer.userId }">${ list[i].buyer.userId }</a>
+				<td align="left" id="abc">
+					<b>${ list[i].buyer.userId }</b>
 				</td>
 				<td></td>
 				<td align="left">${ list[i].receiverName }</td>
@@ -92,7 +109,7 @@
 	
 				<c:if test="${ fn:trim(list[i].tranCode) == '2' }">
 				<td align="left">
-					<a href="/purchase/updateTranCode?tranNo=${ list[i].tranNo }&tranCode=3&currentPage=${ resultPage.currentPage }">물건도착</a>
+					<b id="${ list[i].tranNo }">물건도착</b>
 				</td>
 				</c:if>
 	

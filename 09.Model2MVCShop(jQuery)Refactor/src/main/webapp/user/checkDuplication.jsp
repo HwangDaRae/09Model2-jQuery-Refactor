@@ -111,9 +111,8 @@ window.onload = function(){
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td width="105">
-						<input type="text" name="userId" id="userId" 
-									value="${ ! empty result && result ? userId : '' }" 
-									class="ct_input_g" style="width:100px; height:19px"  maxLength="20" >		
+						<input type="text" name="userId" id="userId" value="${ ! empty result && result ? userId : '' }"
+							class="ct_input_g" style="width:100px; height:19px"  maxLength="20" >		
 					</td>
 					
 					<td>

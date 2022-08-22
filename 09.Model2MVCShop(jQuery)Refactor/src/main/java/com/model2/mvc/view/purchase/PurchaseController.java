@@ -306,6 +306,7 @@ public class PurchaseController {
 		System.out.println("/purchase/getPurchaseFromTranId : GET");
 		
 		List<Purchase> purList = (List<Purchase>)purchaseServiceImpl.getPurchaseFromTranId(tranId);
+		List<String> uploadList = new ArrayList<String>();
 
 		List<Product> proList = new ArrayList<Product>();
 		for (int i = 0; i < purList.size(); i++) {
@@ -315,8 +316,14 @@ public class PurchaseController {
 			proList.add(product);
 		}
 		
-		List<Upload> uploadList = uploadServiceImpl.getUploadFile(proList.get(0).getFileName());
+		for (int i = 0; i < proList.size(); i++) {
+			uploadList.add(uploadServiceImpl.getUploadFile(proList.get(i).getFileName()).get(0).getFileName());
+		}
 		
+		for (int i = 0; i < uploadList.size(); i++) {
+			System.out.println(uploadList);
+		}
+				
 		model.addAttribute("purList", purList);
 		model.addAttribute("proList", proList);
 		model.addAttribute("uploadList", uploadList);

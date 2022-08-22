@@ -9,6 +9,14 @@ $(function(){
 
 	//구매버튼 클릭 => 배송정보 입력 페이지로 이동
 	$("input[value='구매']").bind("click",function(){
+		var checkbox = $("input[type='checkbox']")
+		
+		checkbox.each(function(index, item){
+			if($(checkbox[index]).is(":checked")  == true){
+				//alert(item.value);
+				//alert( $($(checkbox[index]).parent().parent().find("input[name='amount']")).val() );
+			}
+		})
 		$("form").attr("method","post").attr("action","/cart/deliveryCart").submit();
 	})
 	
@@ -155,44 +163,40 @@ $(function(){
 					<!-- list시작 회원-->
 					<c:set var="size" value="${ fn:length(list) }"/>
 					<c:if test="${ count > 0 && user.userId != 'non-member' }">
-						<c:forEach var="i" begin="0" end="${ size-1 }" step="1">
-							<tr class="ct_list_pop" id="divDataId">
-								<td align="center">
-								<c:if test="${ count > 0 }">
-								<input type="checkbox" id="deleteCheckBox" name="deleteCheckBox" value="${ list[i].prod_no }"></td>
-								</c:if>
-								<td></td>
-								<td align="left"><img height="250" width="250" src="/images/uploadFiles/${ list[i].image }"/></td>
-								<td></td>
-								<td align="left">${ list[i].prod_name }</td>
-								<td></td>
-								<td align="left">
-									<input type="button" value="-">
-									<b id="result">${ list[i].amount }</b>
-									<input type="hidden" id="amount" name="amount" value="${ list[i].amount }">
-									<input type="hidden" id="prodAmount" name="prodAmount" value="${ list[i].prod_amount }">
-									<input type="hidden" id="addPurchaseCheckBox" name="addPurchaseCheckBox" value="${ list[i].prod_no }">
-									<input type="button" value="+">
-									<b id="limit"></b>
-								</td>
-								<td></td>
-								<td align="left">
-									<b id="printPrice">${ list[i].price }</b>원 * 
-									<b id="printAmount">${ list[i].amount }</b>개 = 
-									<b id="printTotalPrice">${ list[i].price * list[i].amount }</b>원
-								</td>
-							</tr>
-							<tr>
-								<td colspan="11" bgcolor="D6D7D6" height="1"></td>
-							</tr>
-						</c:forEach>
-					</c:if>
-					
+					<c:forEach var="i" begin="0" end="${ size-1 }" step="1">
+					<tr class="ct_list_pop">
+						<td align="center">
+							<c:if test="${ count > 0 }">
+							<input type="checkbox" id="deleteCheckBox" name="deleteCheckBox" value="${ list[i].prod_no }"></td>
+							</c:if>
+						<td></td>
+						<td align="left"><img height="250" width="250" src="/images/uploadFiles/${ uploadList[i] }"/></td>
+						<td></td>
+						<td align="left">${ list[i].prod_name }</td>
+						<td></td>
+						<td align="left">
+							<input type="button" value="-">
+							<b id="result">${ list[i].amount }</b>
+							<input type="hidden" id="amount" name="amount" value="${ list[i].amount }">
+							<input type="hidden" id="prodAmount" name="prodAmount" value="${ list[i].prod_amount }">
+							<input type="hidden" id="addPurchaseCheckBox" name="addPurchaseCheckBox" value="${ list[i].prod_no }">
+							<input type="button" value="+">
+							<b id="limit"></b>
+						</td>
+						<td></td>
+						<td align="left">
+							<b id="printPrice">${ list[i].price }</b>원 * 
+							<b id="printAmount">${ list[i].amount }</b>개 = 
+							<b id="printTotalPrice">${ list[i].price * list[i].amount }</b>원
+						</td>
+					</tr>
+					</c:forEach>
+					</c:if>					
 					
 					<c:set var="size" value="${ fn:length(list) }"/>
 					<c:if test="${ count > 0 && user.userId == 'non-member' }">
 						<c:forEach var="i" begin="0" end="${ size-1 }" step="1">
-							<tr class="ct_list_pop" id="divDataId">
+							<tr class="ct_list_pop">
 								<td align="center">
 								<c:if test="${ count > 0 }">
 								<input type="checkbox" id="deleteCheckBox" name="deleteCheckBox" value="${ list[i].prod_no }"></td>

@@ -263,7 +263,6 @@ public class CartController {
 					productVO = productServiceImpl.getProduct(checkProdNo[j]);
 					purchaseVO.setPurchaseProd(productVO);
 					
-					
 					//구매한 유저정보
 					System.out.println(user);
 					String userId = ((User)session.getAttribute("user")).getUserId();

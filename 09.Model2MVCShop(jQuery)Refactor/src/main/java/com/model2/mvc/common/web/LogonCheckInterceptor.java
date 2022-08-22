@@ -43,6 +43,7 @@ public class LogonCheckInterceptor extends HandlerInterceptorAdapter {
 		}
 		
 		System.out.println(handler);
+		System.out.println(user);
 
 		// ==> 로그인한 회원이라면...
 		if ( !((User)session.getAttribute("user")).getUserId().equals("non-member") ) {

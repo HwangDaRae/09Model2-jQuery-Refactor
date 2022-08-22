@@ -27,8 +27,10 @@ import com.model2.mvc.service.cart.CartService;
 import com.model2.mvc.service.domain.Cart;
 import com.model2.mvc.service.domain.Product;
 import com.model2.mvc.service.domain.Purchase;
+import com.model2.mvc.service.domain.Upload;
 import com.model2.mvc.service.domain.User;
 import com.model2.mvc.service.product.ProductService;
+import com.model2.mvc.service.upload.UploadService;
 
 @Controller
 @RequestMapping("/cart/*")
@@ -41,6 +43,10 @@ public class CartController {
 	@Autowired
 	@Qualifier("productServiceImpl")
 	ProductService productServiceImpl;
+	
+	@Autowired
+	@Qualifier("uploadServiceImpl")
+	UploadService uploadServiceImpl;
 	
 	public CartController() {
 		System.out.println(getClass() + " default Constructor()]");
@@ -194,6 +200,44 @@ public class CartController {
 		return new ModelAndView("/cart/listCart.jsp", "model", model);
 	}
 
+	/*
+	@RequestMapping(value = "deliveryCart", method = RequestMethod.POST)
+	public ModelAndView deliveryCart(@RequestParam("deleteCheckBox") int[] checkProdNo,
+									@RequestParam("amount") int[] amount,
+			HttpSession session, User user, Model model) throws Exception {
+		System.out.println("/cart/deliveryCart : POST");
+		List<Purchase> purList = new ArrayList<Purchase>();
+
+		for (int i = 0; i < checkProdNo.length; i++) {
+			Purchase purchaseVO = new Purchase();
+			System.out.println("상품번호 : " + checkProdNo[i]);
+			System.out.println("수량 : " + amount[i]);
+			
+			//구매할 상품정보
+			purchaseVO.setPurchaseProd(productServiceImpl.getProduct(checkProdNo[i]));
+			
+			//구매한 유저정보
+			user.setUserId( ((User)session.getAttribute("user")).getUserId() );
+			purchaseVO.setBuyer(user);
+			
+			//구매한 상품의 수량정보
+			purchaseVO.setAmount(amount[i]);
+			
+			purList.add(purchaseVO);
+		}
+		
+		for (int i = 0; i < purList.size(); i++) {
+			System.out.println("purList : " + purList.get(i));
+		}
+		
+		model.addAttribute("purList", purList);
+		model.addAttribute("count", purList.size());
+		
+		return new ModelAndView("/cart/deliveryCart.jsp", "model", model);
+	}
+	*/
+
+	///*
 	@RequestMapping(value = "deliveryCart", method = RequestMethod.POST)
 	public ModelAndView deliveryCart(@RequestParam("addPurchaseCheckBox") int[] allProdNo,
 									@RequestParam("deleteCheckBox") int[] checkProdNo,
@@ -219,6 +263,7 @@ public class CartController {
 					productVO = productServiceImpl.getProduct(checkProdNo[j]);
 					
 					purchaseVO.setPurchaseProd(productVO);
+					
 					
 					//구매한 유저정보
 					System.out.println(user);
@@ -248,6 +293,7 @@ public class CartController {
 		
 		return new ModelAndView("/cart/deliveryCart.jsp", "model", model);
 	}
+	//*/
 
 	@RequestMapping(value = "deleteCart", method = RequestMethod.POST)
 	public ModelAndView deleteCart( @RequestParam("deleteCheckBox") int[] deleteArr, HttpSession session, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
@@ -357,107 +403,6 @@ public class CartController {
 		
 		return modelAndView;
 	}
-
-	/*
-	@RequestMapping(value = "deleteCart", method = RequestMethod.POST)
-	public ModelAndView deleteCart( @RequestParam("deleteCheckBox") int[] deleteArr, HttpSession session, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
-		System.out.println("/cart/deleteCart : POST");
-
-		ModelAndView modelAndView = new ModelAndView();
-		User user = (User)session.getAttribute("user");
-		
-		//1개 or 여러개 삭제시
-		for (int i = 0; i < deleteArr.length; i++) {
-			System.out.println("삭제할 상품 번호 : " + deleteArr[i]);
-		}
-		
-		if(user == null || user.getUserId().equals("non-member")) {
-			System.out.println("비회원");
-			String cookieValue = "";
-			
-			Cookie[] cookies = request.getCookies();
-			if(cookies != null && cookies.length > 0) {
-				for (int i = 0; i < cookies.length; i++) {
-					if(cookies[i].getName().equals("prodInfoCookie")) {
-						cookieValue = URLDecoder.decode(cookies[i].getValue());
-						System.out.println("cookieValue : " + cookieValue);
-					}
-				}
-			}
-
-			for (int i = 0; i < deleteArr.length; i++) {
-				int returnIndexStart = cookieValue.indexOf(deleteArr[i]+"");
-				System.out.println("return된 index : " + returnIndexStart);
-				int returnIndexEnd = cookieValue.substring(returnIndexStart).indexOf(",");
-				System.out.println("returnIndexEnd : " + returnIndexEnd);
-				if(returnIndexEnd == -1) {
-					cookieValue = cookieValue.substring(0, returnIndexStart-1);
-				}else {
-					if(returnIndexStart == 0) {
-						cookieValue = cookieValue.substring(returnIndexStart + returnIndexEnd + 1);
-					}else {
-						cookieValue = cookieValue.substring(0, returnIndexStart-1) + cookieValue.substring(returnIndexStart + returnIndexEnd);
-					}
-				}
-				System.out.println("cookieValue : " + cookieValue);
-			}
-			
-			Cookie c = new Cookie("prodInfoCookie", URLEncoder.encode(cookieValue));
-			c.setMaxAge(24*60*60);
-			response.addCookie(c);
-
-			List<Cart> cartList = new ArrayList<Cart>();
-			String[] prodNoAndAmount = cookieValue.split(",");
-			//10001:1
-			//10022:31
-			//10013:12
-
-			String[] cookieInfo = new String[prodNoAndAmount.length];
-			for (int i = 0; i < prodNoAndAmount.length; i++) {
-				cookieInfo = prodNoAndAmount[i].split(":");
-				//10001
-				//1
-				Product productVO = new Product();
-				productVO = productServiceImpl.getProduct(Integer.parseInt(cookieInfo[0]));
-				Cart cart = new Cart(productVO.getProdNo(), "", productVO.getFileName(), productVO.getProdName(),
-						productVO.getProdDetail(), Integer.parseInt(cookieInfo[1]), productVO.getPrice(), productVO.getAmount());
-				cartList.add(cart);
-				System.out.println(cookieInfo[0]);
-				System.out.println(cookieInfo[1]);
-			}
-			
-			for (int i = 0; i < cartList.size(); i++) {
-				System.out.println("cartList : " + cartList.get(i).toString());
-			}
-			
-			model.addAttribute("list", cartList);
-			model.addAttribute("count", cartList.size());
-			modelAndView.setViewName("/cart/listCart.jsp");
-			
-		}else {
-			//회원이라면
-			Map<String, Object> map = new HashMap<String, Object>();
-			
-			//삭제할 상품번호와 user_id를 map에 넣는다
-			map.put("deleteArray", deleteArr);
-			map.put("user_id", ( (User)session.getAttribute("user") ).getUserId() );
-
-			//장바구니에서 상품을 삭제하고 삭제한 list를 가져온다
-			cartServiceImpl.deleteCart(map);
-			List<Cart> list = cartServiceImpl.getCartList( ( (User)session.getAttribute("user") ).getUserId() );
-			
-			model.addAttribute("list", list);
-			//count : 게시물 수, listCart.jsp에서 count>0일때 for문으로 list출력
-			model.addAttribute("count", list.size());
-
-			modelAndView.setViewName("/cart/listCart.jsp");
-		}
-		
-		modelAndView.addObject("model", model);
-		
-		return modelAndView;
-	}
-	*/
 	
 	@RequestMapping(value = "listCart", method = RequestMethod.GET)
 	public ModelAndView listCart(HttpServletRequest request,
@@ -503,17 +448,24 @@ public class CartController {
 			model.addAttribute("list", cartList);
 			model.addAttribute("count", count);
 		}else {
-			List<Cart> list = new ArrayList<Cart>();
 			System.out.println("여기는 회원 장바구니 리스트");
+			List<Cart> list = new ArrayList<Cart>();
 			list = cartServiceImpl.getCartList(user.getUserId());
+			
+			List<String> uploadList = new ArrayList<String>();
+			for (int i = 0; i < list.size() ; i++) {
+				uploadList.add(uploadServiceImpl.getUploadFile(list.get(i).getImage()).get(0).getFileName());
+			}
 			
 			for (int i = 0; i < list.size(); i++) {
 				System.out.println(list.get(i).toString());
+				System.out.println(uploadList.get(i).toString());
 			}
 			
 			model.addAttribute("list", list);
 			//count : 게시물 수, listCart.jsp에서 count>0일때 for문으로 list출력
 			model.addAttribute("count", list.size());
+			model.addAttribute("uploadList", uploadList);
 		}
 		
 		return new ModelAndView("/cart/listCart.jsp", "model", model);

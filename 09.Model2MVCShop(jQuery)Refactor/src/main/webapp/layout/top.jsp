@@ -1,5 +1,6 @@
 <%@page import="com.model2.mvc.service.domain.User"%>
 <%@ page contentType="text/html; charset=euc-kr" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%
 	User vo=(User)session.getAttribute("user");
@@ -10,6 +11,30 @@
 <title>Model2 MVC Shop git remote 연결 연습용</title>
 
 <link href="/css/left.css" rel="stylesheet" type="text/css">
+<script src="//code.jquery.com/jquery-2.1.4.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+$(function() {
+	 
+	//==> login Event 연결처리부분
+	//==> DOM Object GET 3가지 방법 ==> 1. $(tagName) : 2.(#id) : 3.$(.className)
+	$( "td[width='115']:contains('login')" ).on("click" , function() {
+		//Debug..
+		//alert(  $( "td[width='115']:contains('login')" ).html() );
+		$(window.parent.frames["rightFrame"].document.location).attr("href","/user/login");
+	});
+	
+	
+	//==> login Event 연결처리부분
+	//==> DOM Object GET 3가지 방법 ==> 1. $(tagName) : 2.(#id) : 3.$(.className)
+	$( "td[width='56']:contains('logout')" ).on("click" , function() {
+		//Debug..
+		//alert(  $( "td[width='56']:contains('logout')" ).html() );
+		$(window.parent.document.location).attr("href","/user/logout");
+	}); 
+});	
+
+</script>
 
 </head>
 
@@ -25,23 +50,15 @@
 	    <table width="200" border="0" cellspacing="0" cellpadding="0">
 	        <tr> 
 	          <td width="115">
-	          <%
-	          	if(vo == null) {
-	          %>
-	              <a href="/user/login" target="rightFrame">login</a>
-	          <%
-	          	}
-	          %>        
+		          <c:if test="${ empty user }">
+						login
+		           </c:if>
 	          </td>
 	          <td width="14">&nbsp;</td>
 	          <td width="56">
-	          <%
-	          	if(vo != null) {
-	          %>
-	            <a href="/user/logout" target="_parent">logout</a>
-	           <%
-	          	}
-	           %>
+		          <c:if test="${ ! empty user }">
+		            	logout
+		           </c:if>
 	          </td>
 	        </tr>
 	    </table>

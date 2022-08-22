@@ -41,9 +41,13 @@ $(function(){
 	})
 	
 	$("b").bind("click",function(){
-		var id = $(this).parent().parent().attr("id")
+		var id = $(this).parent().parent().attr("id");
+		var proTranCode = $($(this).parent().parent().children()[2]).attr("id");
+		
 		if($(this).text().trim() == "-배송하기"){
 			location.href="/purchase/updateTranCodeByProd?prodNo="+id+"&currentPage=${ resultPage.currentPage }&tranCode=2&menu=${ menu }";
+		}else if(proTranCode == 0){
+			location.href="/product/getProduct/"+id+"/${ menu }";
 		}else{
 			location.href="/product/updateProductView/"+id+"/${ menu }";
 		}
@@ -205,15 +209,15 @@ function fncGetSortList(priceSort) {
 			<tr class="ct_list_pop" id="${ list[i].prodNo }">
 				<td align="center">${ listSize-i }</td>
 				<td></td>
-					<td align="left">
-						<c:if test="${ fn:trim(list[i].proTranCode) == '0' }">
-							<b>${ list[i].prodName }</b>
-							<%-- <a href="/product/getProduct/${ list[i].prodNo }/${ menu }">${ list[i].prodName }</a> --%>
-						</c:if>
-						<c:if test="${ fn:trim(list[i].proTranCode) != '0' }">
-							${ list[i].prodName }
-						</c:if>
-					</td>
+				<td align="left"  id="${ list[i].proTranCode }">
+					<c:if test="${ fn:trim(list[i].proTranCode) == '0' }">
+						<b>${ list[i].prodName }</b>
+						<%-- <a href="/product/getProduct/${ list[i].prodNo }/${ menu }">${ list[i].prodName }</a> --%>
+					</c:if>
+					<c:if test="${ fn:trim(list[i].proTranCode) != '0' }">
+						${ list[i].prodName }
+					</c:if>
+				</td>
 				
 				<td></td>
 				<td align="left">${ list[i].price }</td>

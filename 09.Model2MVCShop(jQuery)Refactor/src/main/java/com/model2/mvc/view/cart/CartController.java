@@ -261,7 +261,6 @@ public class CartController {
 					
 					//구매할 상품정보
 					productVO = productServiceImpl.getProduct(checkProdNo[j]);
-					
 					purchaseVO.setPurchaseProd(productVO);
 					
 					//구매한 유저정보

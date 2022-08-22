@@ -16,7 +16,7 @@ $(function(){
 	})
 	
 	$("td.ct_btn01:contains('¼öÁ¤')").bind("click",function(){
-		$("form").attr("method","get").attr("action","/user/updateUser?userId=${user.userId}").submit();
+		location.href = "/user/updateUser?userId=${user.userId}";
 	})
 })
 </script>

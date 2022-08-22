@@ -11,18 +11,18 @@
 
 <script type="text/javascript">
 $(function(){
-	//
+	$("b").bind("click",function(){
+		location.href = "/user/getUser?userId="+$(this).text();
+	})
 })
 </script>
 
 <script type="text/javascript">
-
 	// 검색 / page 두가지 경우 모두 Form 전송을 위해 JavaScrpt 이용  
 	function fncGetUserList(currentPage) {
 		document.getElementById("currentPage").value = currentPage;
 	   	document.detailForm.submit();		
 	}
-
 </script>
 
 </head>
@@ -31,9 +31,6 @@ $(function(){
 
 <div style="width:98%; margin-left:10px;">
 
-<!-- ////////////////////////////////////////////////////////////////////////////////////////////////////////// 
-<form name="detailForm" action="/listUser.do" method="post">
-////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
 <form name="detailForm" action="/user/listUser" method="post">
 
 <table width="100%" height="37" border="0" cellpadding="0"	cellspacing="0">
@@ -105,30 +102,25 @@ $(function(){
 			<td align="center">${ i }</td>
 			<td></td>
 			<td align="left">
-				<!-- ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-				<a href="/getUser.do?userId=${user.userId}">${user.userId}</a></td>
-               	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
-			<a href="/user/getUser?userId=${user.userId}">${user.userId}</a></td>
+				<b>${user.userId}</b>
+			</td>
 			<td></td>
 			<td align="left">${user.userName}</td>
 			<td></td>
-			<td align="left">${user.email}</td>		
+			<td align="left">${user.email}</td>
 		</tr>
 		<tr>
-		<td colspan="11" bgcolor="D6D7D6" height="1"></td>
+			<td colspan="11" bgcolor="D6D7D6" height="1"></td>
 		</tr>
 	</c:forEach>
 </table>
-
 
 <!-- PageNavigation Start... -->
 <table width="100%" border="0" cellspacing="0" cellpadding="0"	style="margin-top:10px;">
 	<tr>
 		<td align="center">
 		   <input type="hidden" id="currentPage" name="currentPage" value=""/>
-	
-			<jsp:include page="../common/pageNavigator.jsp"/>	
-			
+			<jsp:include page="../common/pageNavigator.jsp"/>
     	</td>
 	</tr>
 </table>

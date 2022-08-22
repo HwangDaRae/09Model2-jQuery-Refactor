@@ -57,7 +57,7 @@ $(function(){
 			구매 상품수량 : <input type="text" name="amount" value="${ purList[i].amount }">
 		
 			<tr class="ct_list_pop" id="divDataId">
-				<td align="center"><img height="250" width="250" src="/images/uploadFiles/${ proList[i].fileName }"/></td>
+				<td align="center"><img height="250" width="250" src="/images/uploadFiles/${ uploadList[i].fileName }"/></td>
 				<td></td>
 				<td align="left">${ proList[i].prodName }</td>
 				<td></td>

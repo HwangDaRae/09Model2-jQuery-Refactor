@@ -7,8 +7,18 @@
 <title>회원 정보 수정</title>
 
 <link rel="stylesheet" href="/css/admin.css" type="text/css">
+<script src="//code.jquery.com/jquery-2.1.4.js" type="text/javascript"></script>
 
 <script type="text/javascript">
+$(function(){
+	$(".ct_btn01:contains('수정')").bind("click",function(){
+		fncUpdateUser();
+	})
+	
+	$(".ct_btn01:contains('취소')").bind("click",function(){
+		resetData();
+	})
+});
 
 function fncUpdateUser() {
 	// Form 유효성 검증
@@ -25,9 +35,6 @@ function fncUpdateUser() {
 		document.detailForm.phone.value = "";
 	}
 	
-	////////////////////////////////////////////////////////////////////////////////////	
-	//document.detailForm.action='/updateUser.do';
-	////////////////////////////////////////////////////////////////////////////////////
 	document.detailForm.action='/user/updateUser';
 	
 	document.detailForm.submit();
@@ -54,7 +61,6 @@ function resetData() {
 
 <form name="detailForm"  method="post" >
 
-<%--<input type="hidden" name="userId" value="<%=user.getUserId() %>"> --%>
 <input type="hidden" name="userId" value="${user.userId }">
 
 <table width="100%" height="37" border="0" cellpadding="0"	cellspacing="0">
@@ -86,7 +92,6 @@ function resetData() {
 			아이디 <img src="/images/ct_icon_red.gif" width="3" height="3" align="absmiddle" />
 		</td>
 		<td bgcolor="D6D6D6" width="1"></td>
-		<%--<td class="ct_write01"><%=user.getUserId() %>	</td> --%>
 		<td class="ct_write01">${user.userId}	</td>
 	</tr>
 	
@@ -175,7 +180,8 @@ function resetData() {
 						<img src="/images/ct_btnbg01.gif" width="17" height="23" />
 					</td>
 					<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top:3px;">
-						<a href="javascript:fncUpdateUser();">수정</a>
+						<!-- <a href="javascript:fncUpdateUser();">수정</a> -->
+						수정
 					</td>
 					<td width="14" height="23">
 						<img src="/images/ct_btnbg03.gif" width="14" height="23" />
@@ -185,7 +191,8 @@ function resetData() {
 						<img src="/images/ct_btnbg01.gif" width="17" height="23" />
 					</td>
 					<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top:3px;">
-						<a href="javascript:resetData();">취소</a>
+						<!-- <a href="javascript:resetData();">취소</a> -->
+						취소
 					</td>
 					<td width="14" height="23">
 						<img src="/images/ct_btnbg03.gif" width="14" height="23" />

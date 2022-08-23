@@ -200,14 +200,19 @@ public class CartController {
 		return new ModelAndView("/cart/listCart.jsp", "model", model);
 	}
 
-	/*
+	///*
 	@RequestMapping(value = "deliveryCart", method = RequestMethod.POST)
 	public ModelAndView deliveryCart(@RequestParam("deleteCheckBox") int[] checkProdNo,
 									@RequestParam("amount") int[] amount,
 			HttpSession session, User user, Model model) throws Exception {
 		System.out.println("/cart/deliveryCart : POST");
 		List<Purchase> purList = new ArrayList<Purchase>();
-
+		
+		for (int i = 0; i < checkProdNo.length; i++) {
+			System.out.println(checkProdNo[i]);
+			System.out.println(amount[i]);
+		}
+		/*
 		for (int i = 0; i < checkProdNo.length; i++) {
 			Purchase purchaseVO = new Purchase();
 			System.out.println("상품번호 : " + checkProdNo[i]);
@@ -232,12 +237,12 @@ public class CartController {
 		
 		model.addAttribute("purList", purList);
 		model.addAttribute("count", purList.size());
-		
+		*/
 		return new ModelAndView("/cart/deliveryCart.jsp", "model", model);
 	}
-	*/
+	//*/
 
-	///*
+	/*
 	@RequestMapping(value = "deliveryCart", method = RequestMethod.POST)
 	public ModelAndView deliveryCart(@RequestParam("addPurchaseCheckBox") int[] allProdNo,
 									@RequestParam("deleteCheckBox") int[] checkProdNo,
@@ -291,7 +296,7 @@ public class CartController {
 		
 		return new ModelAndView("/cart/deliveryCart.jsp", "model", model);
 	}
-	//*/
+	*/
 
 	@RequestMapping(value = "deleteCart", method = RequestMethod.POST)
 	public ModelAndView deleteCart( @RequestParam("deleteCheckBox") int[] deleteArr, HttpSession session, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
@@ -411,6 +416,7 @@ public class CartController {
 		
 		//left.jsp 레이어에 있는 장바구니 <a href 클릭시 유저에 맞는 장바구니 리스트로 이동
 		User user = (User)session.getAttribute("user");
+		List<String> uploadList = new ArrayList<String>();
 		
 		if(user.getUserId().equals("non-member")) {
 			System.out.println("여기는 비회원");
@@ -430,7 +436,7 @@ public class CartController {
 
 				// prodInfoCookie 쿠키가 있을때만 파싱해서 list 뿌린다
 				if(cookieValue.length() > 1) {
-					String[] prodNoAndAmount = cookieValue.split(",");				
+					String[] prodNoAndAmount = cookieValue.split(",");
 					for (int i = 0; i < prodNoAndAmount.length; i++) {
 						String cookieInfo[] = prodNoAndAmount[i].split(":");
 						Product productVO = productServiceImpl.getProduct(Integer.parseInt(cookieInfo[0]));
@@ -442,15 +448,19 @@ public class CartController {
 				}
 				
 			}//end of if cookies
+
+			for (int i = 0; i < cartList.size() ; i++) {
+				uploadList.add(uploadServiceImpl.getUploadFile(cartList.get(i).getImage()).get(0).getFileName());
+			}
 			
 			model.addAttribute("list", cartList);
+			model.addAttribute("uploadList", uploadList);
 			model.addAttribute("count", count);
 		}else {
 			System.out.println("여기는 회원 장바구니 리스트");
 			List<Cart> list = new ArrayList<Cart>();
 			list = cartServiceImpl.getCartList(user.getUserId());
 			
-			List<String> uploadList = new ArrayList<String>();
 			for (int i = 0; i < list.size() ; i++) {
 				uploadList.add(uploadServiceImpl.getUploadFile(list.get(i).getImage()).get(0).getFileName());
 			}

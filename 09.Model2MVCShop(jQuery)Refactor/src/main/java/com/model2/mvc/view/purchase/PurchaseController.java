@@ -426,6 +426,7 @@ public class PurchaseController {
 	public ModelAndView getNonMemPurchase(@RequestParam("tranId") String tranId, Model model) throws Exception {
 		System.out.println("/purchase/getNonMemPurchase : POST");
 		System.out.println(tranId);
+		List<String> uploadList = new ArrayList<String>();
 		
 		//비회원 주문조회
 		List<Purchase> purList = purchaseServiceImpl.getPurchaseFromTranId(tranId);
@@ -436,7 +437,12 @@ public class PurchaseController {
 			productVO = productServiceImpl.getNonMemberPurchase(purList.get(i).getTranNo());
 			proList.add(productVO);
 		}
-		
+
+		for (int i = 0; i < proList.size() ; i++) {
+			uploadList.add(uploadServiceImpl.getUploadFile(proList.get(i).getFileName()).get(0).getFileName());
+		}
+
+		model.addAttribute("uploadList", uploadList);
 		model.addAttribute("purList", purList);
 		model.addAttribute("proList", proList);
 		

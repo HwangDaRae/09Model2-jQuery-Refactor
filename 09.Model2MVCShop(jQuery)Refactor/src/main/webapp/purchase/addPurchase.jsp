@@ -9,9 +9,6 @@
 <body>
 
 <form name="updatePurchase" action="/purchase/updatePurchaseView/0" method="post">
-
-다음과 같이 구매가 되었습니다.${ i.fileName }
-
 <c:forEach var="i" begin="0" end="${ fn:length(prodList) -1 }" step="1">
 <table border=1>
 	<tr class="ct_list_pop" id="divDataId">

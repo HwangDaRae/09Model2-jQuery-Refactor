@@ -13,11 +13,14 @@ $(function(){
 		
 		checkbox.each(function(index, item){
 			if($(checkbox[index]).is(":checked")  == true){
-				//alert(item.value);
-				//alert( $($(checkbox[index]).parent().parent().find("input[name='amount']")).val() );
+				//체크한 상품번호와 체크한 상품의 수량을 넘긴다
+				var amount = $(checkbox[index]).parent().parent().find("#amount").val();
+				var elemCreate1 = "<input type='text' name='amount' value='" + amount + "'>";
+				$(elemCreate1).appendTo("#result");
+				$(item).appendTo("#result");
 			}
 		})
-		$("form").attr("method","post").attr("action","/cart/deliveryCart").submit();
+		$("form").submit();
 	})
 	
 	//체크한 상품 삭제
@@ -177,8 +180,8 @@ $(function(){
 						<td align="left">
 							<input type="button" value="-">
 							<b id="result">${ list[i].amount }</b>
-							<input type="hidden" id="amount" name="amount" value="${ list[i].amount }">
-							<input type="hidden" id="prodAmount" name="prodAmount" value="${ list[i].prod_amount }">
+							<input type="hidden" id="amount" value="${ list[i].amount }">
+							<input type="hidden" id="prodAmount" value="${ list[i].prod_amount }">
 							<input type="hidden" id="addPurchaseCheckBox" name="addPurchaseCheckBox" value="${ list[i].prod_no }">
 							<input type="button" value="+">
 							<b id="limit"></b>
@@ -199,18 +202,18 @@ $(function(){
 							<tr class="ct_list_pop">
 								<td align="center">
 								<c:if test="${ count > 0 }">
-								<input type="checkbox" id="deleteCheckBox" name="deleteCheckBox" value="${ list[i].prod_no }"></td>
+								<input type="checkbox" id="deleteCheckBox" value="${ list[i].prod_no }"></td>
 								</c:if>
 								<td></td>
-								<td align="left"><img height="250" width="250" src="/images/uploadFiles/${ list[i].image }"/></td>
+								<td align="left"><img height="250" width="250" src="/images/uploadFiles/${ uploadList[i] }"/></td>
 								<td></td>
 								<td align="left">${ list[i].prod_name }</td>
 								<td></td>
 								<td align="left">
 									<input type="button" value="-">
 									<b id="result">${ list[i].amount }</b>
-									<input type="text" id="amount" name="amount" value="${ list[i].amount }">
-									<input type="text" id="prodAmount" name="prodAmount" value="${ list[i].prod_amount }">
+									<input type="text" id="amount" value="${ list[i].amount }">
+									<input type="text" id="prodAmount" value="${ list[i].prod_amount }">
 									<input type="text" id="addPurchaseCheckBox" name="addPurchaseCheckBox" value="${ list[i].prod_no }">
 									<input type="button" value="+">
 									<b id="limit"></b>

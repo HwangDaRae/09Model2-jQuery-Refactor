@@ -25,7 +25,7 @@ $(function(){
 	})
 	
 	$("#navigator_end").bind("click",function(){
-		fncGetList(${ resultPage.maxPage })
+		fncGetList('${ resultPage.maxPage }')
 	})
 	
 	$("b:contains('가격순')").bind("click",function(){
@@ -40,7 +40,7 @@ $(function(){
 		fncGetProductList()
 	})
 	
-	$("b").bind("click",function(){
+	$(".ct_list_").bind("click",function(){
 		var id = $(this).parent().parent().attr("id");
 		var proTranCode = $($(this).parent().parent().children()[2]).attr("id");
 		
@@ -57,19 +57,19 @@ $(function(){
 
 
 function fncGetList(currentPage) {
-	document.getElementById("currentPage").value = currentPage;
-   	document.detailForm.submit();
+	$("#currentPage").val(currentPage);
+	$("form").submit();
 }
 
 function fncGetProductList() {
 	document.detailForm.searchCondition.value = document.detailForm.searchCondition.value;
 	document.forms[0].elements[2].value = document.forms[0].elements[2].value;
-   	document.detailForm.submit();
+	$("form").submit();
 }
 
 function fncGetSortList(priceSort) {
-	document.detailForm.priceSort.value = priceSort;
-   	document.detailForm.submit();
+	$("input[name='priceSort']").val(priceSort);
+	$("form").submit();
 }
 
 </script>
@@ -171,7 +171,7 @@ function fncGetSortList(priceSort) {
 				<td></td>
 					<td align="left">
 						<!-- 판매코드가 0이 아니면 상품수정 불가 -->
-						<b>${ list[i].prodName }</b>
+						<b class="ct_list_">${ list[i].prodName }</b>
 						<%-- <a href="/product/updateProductView/${ list[i].prodNo }/${ menu }">${ list[i].prodName }</a> --%>
 					</td>				
 				<td></td>
@@ -186,7 +186,7 @@ function fncGetSortList(priceSort) {
 					<c:if test="${ fn:trim(list[i].proTranCode) == '1' }">
 						구매완료
 						<c:if test="${ menu == 'manage' }">
-							<b>-배송하기</b>
+							<b class="ct_list_">-배송하기</b>
 							<%-- -<a href="/purchase/updateTranCodeByProd?prodNo=${ list[i].prodNo }&currentPage=${ resultPage.currentPage }&tranCode=2&menu=${ menu }">배송하기</a> --%>
 						</c:if>
 					</c:if>
@@ -211,7 +211,7 @@ function fncGetSortList(priceSort) {
 				<td></td>
 				<td align="left"  id="${ list[i].proTranCode }">
 					<c:if test="${ fn:trim(list[i].proTranCode) == '0' }">
-						<b>${ list[i].prodName }</b>
+						<b class="ct_list_">${ list[i].prodName }</b>
 						<%-- <a href="/product/getProduct/${ list[i].prodNo }/${ menu }">${ list[i].prodName }</a> --%>
 					</c:if>
 					<c:if test="${ fn:trim(list[i].proTranCode) != '0' }">

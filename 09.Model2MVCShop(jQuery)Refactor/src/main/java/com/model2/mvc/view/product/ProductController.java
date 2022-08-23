@@ -119,10 +119,12 @@ public class ProductController {
 	@RequestMapping( value = "listProduct", method = RequestMethod.POST )
 	public String listProduct( @RequestParam("menu") String menu, Model model, User user, HttpSession session, Search search) throws Exception {
 		System.out.println("/product/listProduct : POST");
+		
 		System.out.println(search);
 		System.out.println(user);
 		System.out.println(menu);
 		System.out.println(session.getAttribute("user"));
+		
 		
 		if(((User)session.getAttribute("user")).getUserId().equals("non-member")) {
 			//비회원 상품 검색 Anchor Tag 클릭

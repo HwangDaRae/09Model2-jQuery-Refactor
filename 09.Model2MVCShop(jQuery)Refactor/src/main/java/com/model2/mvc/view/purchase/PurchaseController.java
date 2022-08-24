@@ -306,7 +306,6 @@ public class PurchaseController {
 		
 		model.addAttribute("uploadList", uploadList);
 		model.addAttribute("count", uploadList.size());
-		
 		model.addAttribute("list", list);
 		model.addAttribute("prodList", prodList);
 		

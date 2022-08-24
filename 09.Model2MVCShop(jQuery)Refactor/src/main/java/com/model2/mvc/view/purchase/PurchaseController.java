@@ -189,6 +189,7 @@ public class PurchaseController {
 		List<Purchase> list = new ArrayList<Purchase>();
 		List<Product> prodList = new ArrayList<Product>();
 		Product productVO = new Product();
+		List<String> uploadList = new ArrayList<String>();
 		
 		//주문번호에 넣은 식별성있는 값
 		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");		
@@ -294,6 +295,17 @@ public class PurchaseController {
 			System.out.println(list.get(i).toString());
 			System.out.println(prodList.get(i).toString());
 		}
+
+		for (int i = 0; i < prodList.size() ; i++) {
+			uploadList.add(uploadServiceImpl.getUploadFile(prodList.get(i).getFileName()).get(0).getFileName());
+		}
+		
+		for (int i = 0; i < uploadList.size(); i++) {
+			System.out.println("어떻게 나오나 " + uploadList.get(i));
+		}
+		
+		model.addAttribute("uploadList", uploadList);
+		model.addAttribute("count", uploadList.size());
 		
 		model.addAttribute("list", list);
 		model.addAttribute("prodList", prodList);

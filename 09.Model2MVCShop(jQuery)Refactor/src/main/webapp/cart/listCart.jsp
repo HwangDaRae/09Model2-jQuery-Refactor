@@ -1,16 +1,19 @@
-<%@page language="java" contentType="text/html; charset=EUC-KR" pageEncoding="EUC-KR"%>
+<%@ page language="java" contentType="text/html; charset=EUC-KR" pageEncoding="EUC-KR"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>Insert title here</title>
+<link rel="stylesheet" href="/css/admin.css" type="text/css">
 <script src="//code.jquery.com/jquery-2.1.4.js" type="text/javascript"></script>
 <script type="text/javascript">
-
 $(function(){
-
 	//구매버튼 클릭 => 배송정보 입력 페이지로 이동
 	$("input[value='구매']").bind("click",function(){
 		var checkbox = $("input[type='checkbox']")
-		
+		/*
 		checkbox.each(function(index, item){
 			if($(checkbox[index]).is(":checked")  == true){
 				//체크한 상품번호와 체크한 상품의 수량을 넘긴다
@@ -20,6 +23,7 @@ $(function(){
 				$(item).appendTo("#result");
 			}
 		})
+		*/
 		$("form").submit();
 	})
 	
@@ -28,25 +32,6 @@ $(function(){
 		if(confirm('정말 삭제하시겠습니까?')){
 			$("form").attr("method","post").attr("action","/cart/deleteCart").submit();
 		}
-	})
-	
-	//상품 체크박스 상태가 변경되면 전체상품의 개수 변경
-	$("#deleteCheckBox").bind("change",function(){
-		var arrayCheckBox = $("input[name='deleteCheckBox']")
-		var checkCount = 0;
-		
-		arrayCheckBox.each(function(index){
-			if( $( arrayCheckBox[index] ).is(":checked") == true ){
-				checkCount++;
-			}
-		})
-		
-		if( checkCount == arrayCheckBox.length ){
-			$("#allDeleteCheckBox").attr("checked", true);
-		}else{
-			$("#allDeleteCheckBox").attr("checked", false);
-		}
-		$("#checkCount").text(checkCount);
 	})
 	
 	//수량 plus
@@ -89,36 +74,47 @@ $(function(){
 		$(this).parent().children("#result").text(countAmount);
 		$(this).parent().children("#amount").val(countAmount);
 	})
-
+	
 	//전체선택 체크박스 클릭시 모든 체크박스 선택됨
 	$("#allDeleteCheckBox").bind("click",function(){		
-		var arrayCheckBox = $("input[name='deleteCheckBox']")		
+		var arrayCheckBox = $("input[name='deleteCheckBox']")
 		
 		if( $("#allDeleteCheckBox").is(':checked') == true ){
 			$("#checkCount").text(arrayCheckBox.length);
 			arrayCheckBox.each(function( index, elem ){
-				//alert( $( arrayCheckBox[index] ).attr("name"));
-				$( arrayCheckBox[index] ).attr("checked",true);
+				$( arrayCheckBox[index] ).prop("checked",true);
 			})			
 			
 		}else if( $("#allDeleteCheckBox").is(':checked') == false ){
 			$("#checkCount").text(0);
 			arrayCheckBox.each(function( index, elem ){
-				//alert( $( arrayCheckBox[index] ).attr("name"));
-				$( arrayCheckBox[index] ).attr("checked",false);
+				$( arrayCheckBox[index] ).prop("checked",false);
 			})
 		}
 	})
+	
+	//상품 체크박스 상태가 변경되면 전체상품의 개수 변경
+	$("input[name='deleteCheckBox']").bind("change",function(){
+		var arrayCheckBox = $("input[name='deleteCheckBox']")
+		var checkCount = 0;
 		
-});
+		arrayCheckBox.each(function(index){
+			if($(arrayCheckBox[index]).is(":checked") == true ){
+				checkCount++;
+			}
+		})
+		
+		if(checkCount == arrayCheckBox.length){
+			$("input[name='allDeleteCheckBox']").prop("checked",true);
+		}else{
+			$("input[name='allDeleteCheckBox']").prop("checked",false);
+		}
+		$("#checkCount").text(checkCount);
+	})
+	
+})
 </script>
-
-<html>
-<head>
-<meta charset="EUC-KR">
-<link rel="stylesheet" href="/css/admin.css" type="text/css">
 </head>
-
 <body bgcolor="#ffffff" text="#000000">
 	<div style="width: 98%; margin-left: 10px;">
 		<form name="detailForm" action="/cart/deliveryCart" method="post">
@@ -180,7 +176,7 @@ $(function(){
 						<td align="left">
 							<input type="button" value="-">
 							<b id="result">${ list[i].amount }</b>
-							<input type="hidden" id="amount" value="${ list[i].amount }">
+							<input type="hidden" id="amount" name="amount" value="${ list[i].amount }">
 							<input type="hidden" id="prodAmount" value="${ list[i].prod_amount }">
 							<input type="hidden" id="addPurchaseCheckBox" name="addPurchaseCheckBox" value="${ list[i].prod_no }">
 							<input type="button" value="+">
@@ -202,7 +198,7 @@ $(function(){
 							<tr class="ct_list_pop">
 								<td align="center">
 								<c:if test="${ count > 0 }">
-								<input type="checkbox" id="deleteCheckBox" value="${ list[i].prod_no }"></td>
+								<input type="checkbox" id="deleteCheckBox" name="deleteCheckBox" value="${ list[i].prod_no }"></td>
 								</c:if>
 								<td></td>
 								<td align="left"><img height="250" width="250" src="/images/uploadFiles/${ uploadList[i] }"/></td>
@@ -212,7 +208,7 @@ $(function(){
 								<td align="left">
 									<input type="button" value="-">
 									<b id="result">${ list[i].amount }</b>
-									<input type="text" id="amount" value="${ list[i].amount }">
+									<input type="text" id="amount" name="amount" value="${ list[i].amount }">
 									<input type="text" id="prodAmount" value="${ list[i].prod_amount }">
 									<input type="text" id="addPurchaseCheckBox" name="addPurchaseCheckBox" value="${ list[i].prod_no }">
 									<input type="button" value="+">
@@ -244,5 +240,4 @@ $(function(){
 		</form>
 
 	</div>
-</body>
 </html>

@@ -18,7 +18,7 @@ $(function(){
 	})
 	
 	$("#show_calendar").bind("click",function(){
-		show_calendar('document.detailForm.manuDate', document.detailForm.manuDate.value)
+		show_calendar('document.detailForm.divyDate', document.detailForm.divyDate.value)
 	})
 })
 </script>
@@ -79,7 +79,7 @@ $(function(){
 							<input type="text" name="amountArr" value="${ purList[i].amount }">
 							
 							<tr class="ct_list_pop" id="divDataId">
-								<td align="center"><img height="250" width="250" src="/images/uploadFiles/${ purList[i].purchaseProd.fileName }"/></td>
+								<td align="center"><img height="250" width="250" src="/images/uploadFiles/${ uploadList[i] }"/></td>
 								<td></td>
 								<td align="left">${ purList[i].purchaseProd.prodName }</td>
 								<td></td>
@@ -87,7 +87,7 @@ $(function(){
 								<td></td>
 								<td align="left">${ purList[i].amount }개</td>
 								<td></td>
-								<td align="left">${ purList[i].purchaseProd.price } * ${ purList[i].amount } = ${ purList[i].purchaseProd.price * purList[i].amount }</td>
+								<td align="left">${ purList[i].purchaseProd.price }원 * ${ purList[i].amount }개 = ${ purList[i].purchaseProd.price * purList[i].amount }원</td>
 							</tr>
 							<tr>
 								<td colspan="11" bgcolor="D6D7D6" height="1"></td>

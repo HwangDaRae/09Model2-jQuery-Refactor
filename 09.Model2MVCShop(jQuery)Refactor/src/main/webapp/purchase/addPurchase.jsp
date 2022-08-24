@@ -13,9 +13,7 @@
 <table border=1>
 	<tr class="ct_list_pop" id="divDataId">
 		<td align="center">
-			<c:forEach var="j" begin="0" end="${ count-1 }" step="1" items="${ uploadList }">
-				<img height="250" width="250" src="/images/uploadFiles/${ j.fileName }"/></td>
-			</c:forEach>
+			<img height="250" width="250" src="/images/uploadFiles/${ uploadList[i] }"/></td>
 		<td></td>
 		<td align="left">${ prodList[i].prodName }</td>
 		<td></td>

@@ -174,6 +174,7 @@ public class CartController {
 		}else {
 			// 회원 : 같은 상품이 있는지 비교할 리스트
 			List<Cart> cartList = cartServiceImpl.getCartList( ((User)session.getAttribute("user")).getUserId() );
+			List<String> uploadList = new ArrayList<String>();
 			
 			//장바구니 전부를 가져와서 상품번호가 같다면 수량추가
 			boolean isProdNo = false;
@@ -192,6 +193,12 @@ public class CartController {
 			}
 			//jsp에서 출력할 list 장바구니 list 가져온다
 			cartList = cartServiceImpl.getCartList( ((User)session.getAttribute("user")).getUserId() );
+
+			for (int i = 0; i < cartList.size() ; i++) {
+				uploadList.add(uploadServiceImpl.getUploadFile(cartList.get(i).getImage()).get(0).getFileName());
+			}
+			
+			model.addAttribute("uploadList", uploadList);
 			
 			model.addAttribute("list", cartList);
 			model.addAttribute("count", cartList.size());
@@ -200,7 +207,7 @@ public class CartController {
 		return new ModelAndView("/cart/listCart.jsp", "model", model);
 	}
 
-	///*
+	/*
 	@RequestMapping(value = "deliveryCart", method = RequestMethod.POST)
 	public ModelAndView deliveryCart(@RequestParam("deleteCheckBox") int[] checkProdNo,
 									@RequestParam("amount") int[] amount,
@@ -212,7 +219,7 @@ public class CartController {
 			System.out.println(checkProdNo[i]);
 			System.out.println(amount[i]);
 		}
-		/*
+		
 		for (int i = 0; i < checkProdNo.length; i++) {
 			Purchase purchaseVO = new Purchase();
 			System.out.println("상품번호 : " + checkProdNo[i]);
@@ -237,12 +244,12 @@ public class CartController {
 		
 		model.addAttribute("purList", purList);
 		model.addAttribute("count", purList.size());
-		*/
+		
 		return new ModelAndView("/cart/deliveryCart.jsp", "model", model);
 	}
-	//*/
+	*/
 
-	/*
+	///*
 	@RequestMapping(value = "deliveryCart", method = RequestMethod.POST)
 	public ModelAndView deliveryCart(@RequestParam("addPurchaseCheckBox") int[] allProdNo,
 									@RequestParam("deleteCheckBox") int[] checkProdNo,
@@ -253,6 +260,7 @@ public class CartController {
 		//구매 페이지에서 받은 모든 체크박스와 체크된 체크박스를 비교해서 index를 알아낸다 그 index에 맞는 상품번호, 수량을 보낸다
 		List<Purchase> purList = new ArrayList<Purchase>();
 		Product productVO = new Product();
+		List<String> uploadList = new ArrayList<String>();
 
 		for (int i = 0; i < allProdNo.length; i++) {
 			System.out.println("for문1 : allProdNo[" + i + "] : " + allProdNo[i]);
@@ -290,13 +298,19 @@ public class CartController {
 		for (int i = 0; i < purList.size(); i++) {
 			System.out.println("purList : " + purList.get(i));
 		}
+
+		for (int i = 0; i < purList.size() ; i++) {
+			uploadList.add(uploadServiceImpl.getUploadFile(purList.get(i).getPurchaseProd().getFileName()).get(0).getFileName());
+		}
+		
+		model.addAttribute("uploadList", uploadList);
 		
 		model.addAttribute("purList", purList);
 		model.addAttribute("count", purList.size());
 		
 		return new ModelAndView("/cart/deliveryCart.jsp", "model", model);
 	}
-	*/
+	//*/
 
 	@RequestMapping(value = "deleteCart", method = RequestMethod.POST)
 	public ModelAndView deleteCart( @RequestParam("deleteCheckBox") int[] deleteArr, HttpSession session, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
@@ -386,6 +400,7 @@ public class CartController {
 		}else {
 			//회원이라면
 			Map<String, Object> map = new HashMap<String, Object>();
+			List<String> uploadList = new ArrayList<String>();
 			
 			//삭제할 상품번호와 user_id를 map에 넣는다
 			map.put("deleteArray", deleteArr);
@@ -394,7 +409,12 @@ public class CartController {
 			//장바구니에서 상품을 삭제하고 삭제한 list를 가져온다
 			cartServiceImpl.deleteCart(map);
 			List<Cart> list = cartServiceImpl.getCartList( ( (User)session.getAttribute("user") ).getUserId() );
+
+			for (int i = 0; i < list.size() ; i++) {
+				uploadList.add(uploadServiceImpl.getUploadFile(list.get(i).getImage()).get(0).getFileName());
+			}
 			
+			model.addAttribute("uploadList", uploadList);
 			model.addAttribute("list", list);
 			//count : 게시물 수, listCart.jsp에서 count>0일때 for문으로 list출력
 			model.addAttribute("count", list.size());
